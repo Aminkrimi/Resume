@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>محمد امین کریمی — Mohammad Amin Karimi · Front-End Engineer</title>
+  <meta name="description" content="Mohammad Amin Karimi — Front-End Engineer (React, TypeScript), UI craftsman, photographer and live-stream director based in Tehran. محمد امین کریمی، توسعه‌دهندهٔ فرانت‌اند.">
+  <meta name="author" content="Mohammad Amin Karimi">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Mohammad Amin Karimi — Front-End Engineer">
+  <meta property="og:description" content="React & TypeScript engineer with a director's eye. Portfolio, experience and contact.">
+  <meta property="og:image" content="assets/img/profile.webp">
+  <meta property="og:locale" content="fa_IR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/profile-sm.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;700;800;900&display=swap">
+  <link rel="preload" as="image" href="assets/img/profile.webp">
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <script>
+    /* Apply saved theme + language before first paint (no flash). */
+    (function () {
+      var d = document.documentElement, q = new URLSearchParams(location.search);
+      var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+      var lang = q.get('lang') || get('cv-lang') || 'fa';
+      if (lang !== 'en') lang = 'fa';
+      var theme = get('cv-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      d.lang = lang; d.dir = lang === 'fa' ? 'rtl' : 'ltr'; d.dataset.theme = theme; d.classList.add('js');
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mohammad Amin Karimi",
+    "alternateName": "محمد امین کریمی",
+    "jobTitle": "Front-End Engineer",
+    "email": "mailto:m.amiin.krimi@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Tehran", "addressCountry": "IR" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of Qom" },
+    "knowsAbout": ["React", "TypeScript", "JavaScript", "CSS", "UI Design", "Machine Learning", "Photography", "Live Streaming"],
+    "sameAs": ["https://github.com/Aminkrimi", "https://t.me/AminKrimi", "https://www.instagram.com/amiin_krimi"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="ui.skip">پرش به محتوا</a>
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="letterbox" aria-hidden="true"><span></span><span></span></div>
+  <div class="flash" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+
+  <header class="topbar" id="top">
+    <a class="brand" href="#hero" aria-label="Home">
+      <span class="brand-mark">AK</span>
+      <span class="brand-rec"><span class="dot"></span><span class="brand-rec-label">REC</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul id="nav-list"></ul>
+    </nav>
+    <div class="controls">
+      <button class="ctrl" id="btn-cmd" type="button" aria-label="Command palette" title="⌘K">
+        <svg class="i"><use href="#i-command"/></svg><kbd>K</kbd>
+      </button>
+      <button class="ctrl" id="btn-lang" type="button" aria-label="Switch language"><span id="lang-label">EN</span></button>
+      <button class="ctrl" id="btn-theme" type="button" aria-label="Toggle theme">
+        <svg class="i i-sun"><use href="#i-sun"/></svg>
+        <svg class="i i-moon"><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="dock" aria-label="Sections"><ul id="dock-list"></ul></nav>
+
+  <main id="main">
+    <section class="hero" id="hero" aria-label="Intro"></section>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+    <section class="section" id="about"></section>
+    <section class="section" id="skills"></section>
+    <section class="section" id="experience"></section>
+    <section class="section" id="work"></section>
+    <section class="section contact" id="contact"></section>
+  </main>
+
+  <footer class="footer" id="footer"></footer>
+
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+    <div class="palette-backdrop" data-close></div>
+    <div class="palette-box">
+      <div class="palette-input">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input id="palette-input" type="text" autocomplete="off" spellcheck="false">
+        <kbd>esc</kbd>
+      </div>
+      <ul class="palette-list" id="palette-list" role="listbox"></ul>
+      <div class="palette-foot" id="palette-foot"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Printable CV (rendered from data.js on print) -->
+  <article class="print-cv" id="print-cv" aria-hidden="true"></article>
+
+  <noscript><p style="padding:2rem;text-align:center">برای مشاهدهٔ رزومه جاوااسکریپت را فعال کنید. · Please enable JavaScript to view this resume.</p></noscript>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+      <symbol id="i-command" viewBox="0 0 24 24"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></symbol>
+      <symbol id="i-telegram" viewBox="0 0 24 24"><path d="m22 3-9.5 18-2.5-7.5L2.5 11z"/><path d="M22 3 10 13.5"/></symbol>
+      <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-7"/></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+      <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 1 10-10c0 2.8-2.2 4-4 4h-2a2 2 0 0 0-1.5 3.3A1.6 1.6 0 0 1 12 22z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="16.5" cy="10.5" r="1"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+      <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v.1A3 3 0 0 0 4.5 9 3 3 0 0 0 4 14.5 3 3 0 0 0 7 19.5 2.5 2.5 0 0 0 12 20V4.5A2.5 2.5 0 0 0 9.5 2zM14.5 2A2.5 2.5 0 0 1 17 4.5v.1A3 3 0 0 1 19.5 9a3 3 0 0 1 .5 5.5 3 3 0 0 1-3 5A2.5 2.5 0 0 1 12 20"/></symbol>
+      <symbol id="i-tree" viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="13" r="2"/><circle cx="18" cy="13" r="2"/><circle cx="3" cy="21" r="1.5"/><circle cx="9" cy="21" r="1.5"/><path d="m10.8 5.6-3.6 5.8M13.2 5.6l3.6 5.8M5.2 14.8 3.6 19.6M6.8 14.8l1.6 4.8"/></symbol>
+      <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 16h5M17 8h5M17 16h5M2 12h20"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+      <symbol id="i-grad" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></symbol>
+    </defs>
+  </svg>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
