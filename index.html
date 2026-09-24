@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>محمد امین کریمی — Mohammad Amin Karimi · Front-End Engineer</title>
-  <meta name="description" content="Mohammad Amin Karimi — Front-End Engineer (React, TypeScript), UI craftsman, photographer and live-stream director based in Tehran. محمد امین کریمی، توسعه‌دهندهٔ فرانت‌اند.">
+  <meta name="description" content="Mohammad Amin Karimi — Front-End Engineer (React, Next.js, TypeScript) based in Tehran. محمد امین کریمی، توسعه‌دهندهٔ فرانت‌اند.">
   <meta name="author" content="Mohammad Amin Karimi">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#060a13" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f7fc" media="(prefers-color-scheme: light)">
 
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Mohammad Amin Karimi — Front-End Engineer">
-  <meta property="og:description" content="React & TypeScript engineer with a director's eye. Portfolio, experience and contact.">
+  <meta property="og:description" content="React, Next.js & TypeScript engineer. Portfolio, experience and contact.">
   <meta property="og:image" content="assets/img/profile.webp">
   <meta property="og:locale" content="fa_IR">
   <meta property="og:locale:alternate" content="en_US">
@@ -59,15 +59,13 @@
   <a class="skip-link" href="#main" data-i18n="ui.skip">پرش به محتوا</a>
 
   <div class="progress" aria-hidden="true"><span></span></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="letterbox" aria-hidden="true"><span></span><span></span></div>
-  <div class="flash" aria-hidden="true"></div>
-  <div class="cursor" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
 
   <header class="topbar" id="top">
     <a class="brand" href="#hero" aria-label="Home">
-      <span class="brand-mark">AK</span>
-      <span class="brand-rec"><span class="dot"></span><span class="brand-rec-label">REC</span></span>
+      <span class="brand-mark">&lt;/&gt;</span>
+      <span class="brand-name">amin<b>.</b>karimi</span>
     </a>
     <nav class="nav" aria-label="Primary">
       <ul id="nav-list"></ul>
@@ -75,6 +73,9 @@
     <div class="controls">
       <button class="ctrl" id="btn-cmd" type="button" aria-label="Command palette" title="⌘K">
         <svg class="i"><use href="#i-command"/></svg><kbd>K</kbd>
+      </button>
+      <button class="ctrl" id="btn-term" type="button" aria-label="Terminal" title="`">
+        <svg class="i"><use href="#i-terminal"/></svg>
       </button>
       <button class="ctrl" id="btn-lang" type="button" aria-label="Switch language"><span id="lang-label">EN</span></button>
       <button class="ctrl" id="btn-theme" type="button" aria-label="Toggle theme">
@@ -107,6 +108,17 @@
       </div>
       <ul class="palette-list" id="palette-list" role="listbox"></ul>
       <div class="palette-foot" id="palette-foot"></div>
+    </div>
+  </div>
+
+  <div class="term" id="term" role="dialog" aria-modal="true" aria-label="Terminal" hidden>
+    <div class="term-backdrop" data-close></div>
+    <div class="term-win">
+      <div class="term-bar"><span class="lights"><i></i><i></i><i></i></span><span class="title">amin@karimi: ~</span><button type="button" data-close aria-label="Close">esc ✕</button></div>
+      <div class="term-body" id="term-body">
+        <div id="term-out"></div>
+        <label class="term-row"><span class="t-p">amin@karimi</span><span class="t-m">:</span><span class="t-d">~</span><span class="t-m">$</span><input id="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input"></label>
+      </div>
     </div>
   </div>
 
@@ -149,6 +161,10 @@
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
       <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
       <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m4 17 6-5-6-5M12 19h8"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></symbol>
+      <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 4-6 3-11 5.5"/></symbol>
+      <symbol id="i-react" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></symbol>
       <symbol id="i-grad" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></symbol>
     </defs>
   </svg>

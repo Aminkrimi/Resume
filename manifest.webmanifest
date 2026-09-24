@@ -3,8 +3,8 @@
   "short_name": "Amin Karimi",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#09090b",
+  "background_color": "#060a13",
+  "theme_color": "#060a13",
   "icons": [
     { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "assets/img/profile-sm.png", "sizes": "192x192", "type": "image/png" }

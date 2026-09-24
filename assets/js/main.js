@@ -22,6 +22,7 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   const SECTIONS = ['about', 'skills', 'experience', 'work', 'contact'];
+  const FILES = { about: 'about.md', skills: 'skills.json', experience: 'experience.log', work: 'projects/', contact: 'contact.sh' };
   const LEVELS = {
     5: { fa: 'مسلط', en: 'EXPERT' },
     4: { fa: 'پیشرفته', en: 'ADVANCED' },
@@ -30,17 +31,73 @@
     1: { fa: 'مبتدی', en: 'LEARNING' }
   };
 
-  const sceneHead = (i, id, title, lead) => `
-    <div class="scene-head reveal">
-      <div class="scene-label">
-        <span class="num">SC-${pad(i)}</span>
-        <span>${t(CV.ui.scene)} ${num(pad(i))} — ${t(CV.ui.nav[id])}</span>
+  const secHead = (i, id, title, lead) => `
+    <div class="sec-head reveal">
+      <div class="sec-label">
+        <span class="num">${pad(i)}</span>
+        <span class="file">${icon('file')}${FILES[id]}</span>
         <span class="rule"></span>
-        <span class="take">TAKE 01</span>
+        <span>${t(CV.ui.nav[id])}</span>
       </div>
-      <h2 class="scene-title">${title}</h2>
-      ${lead ? `<p class="scene-lead">${lead}</p>` : ''}
+      <h2 class="sec-title">${title}</h2>
+      ${lead ? `<p class="sec-lead">${lead}</p>` : ''}
     </div>`;
+
+  /* ================= Code editor (hero) ================= */
+  // Each line: array of [class, text]. Classes map to .sx-* syntax colours.
+  const CODE = [
+    [['c', '// amin.tsx — hello, world 👋']],
+    [['k', 'import'], ['u', ' { '], ['p', 'Developer'], ['u', ' } '], ['k', 'from'], ['s', " '@/types'"], ['u', ';']],
+    [],
+    [['k', 'export const'], ['p', ' amin'], ['u', ': '], ['f', 'Developer'], ['u', ' = {']],
+    [['p', '  name'], ['u', ': '], ['s', "'Mohammad Amin Karimi'"], ['u', ',']],
+    [['p', '  role'], ['u', ': '], ['s', "'Front-End Engineer'"], ['u', ',']],
+    [['p', '  stack'], ['u', ': ['], ['s', "'React'"], ['u', ', '], ['s', "'Next.js'"], ['u', ', '], ['s', "'TS'"], ['u', '],']],
+    [['p', '  experience'], ['u', ': '], ['n', String(new Date().getFullYear() - CV.person.startYear)], ['u', ', '], ['c', '// years']],
+    [['p', '  available'], ['u', ': '], ['b', 'true'], ['u', ',']],
+    [['u', '};']],
+    [],
+    [['k', 'export default function'], ['f', ' Hire'], ['u', '() {']],
+    [['k', '  return'], ['u', ' <'], ['f', 'Amin'], ['p', ' coffee'], ['u', '={'], ['n', 'Infinity'], ['u', '} />;']],
+    [['u', '}']]
+  ];
+  const CODE_LEN = CODE.reduce((a, l) => a + l.reduce((b, [, s]) => b + [...s].length, 0) + 1, 0);
+
+  function codeHTML(limit = Infinity) {
+    let left = limit;
+    const out = [];
+    for (let i = 0; i < CODE.length; i++) {
+      let html = '', stop = false;
+      for (const [cls, text] of CODE[i]) {
+        const chars = [...text], take = Math.min(chars.length, left);
+        if (take > 0) html += `<span class="sx-${cls}">${esc(chars.slice(0, take).join(''))}</span>`;
+        left -= take;
+        if (take < chars.length) { stop = true; break; }
+      }
+      if (!stop && left <= 0 && limit !== Infinity) stop = true;
+      if (stop) { out.push(`<span class="ln" data-n="${i + 1}">${html}<span class="type-caret"></span></span>`); break; }
+      out.push(`<span class="ln" data-n="${i + 1}">${html || ' '}</span>`);
+      left -= 1;
+    }
+    return out.join('');
+  }
+
+  let codeToken = 0;
+  function typeCode() {
+    const el = $('#code');
+    if (!el) return;
+    const my = ++codeToken;
+    if (reduced) { el.innerHTML = codeHTML(); return; }
+    let n = 0;
+    const step = () => {
+      if (my !== codeToken) return;
+      n += 2;
+      el.innerHTML = codeHTML(n);
+      if (n < CODE_LEN) setTimeout(step, 16);
+      else el.innerHTML = codeHTML();
+    };
+    setTimeout(step, 600);
+  }
 
   /* ================= Renderers ================= */
 
@@ -69,35 +126,35 @@
     $('#hero').innerHTML = `
       <div class="wrap hero-grid">
         <div class="hero-main">
-          <span class="hero-kicker reveal"><span class="dot"></span>${t(CV.ui.heroKicker)} · ${t(p.availability)}</span>
+          <span class="hero-kicker reveal"><span class="dot pulse"></span>${t(p.availability)}</span>
+          <p class="hero-hello reveal" style="--d:1">// ${lang === 'fa' ? 'سلام، من' : "hi there, I'm"}</p>
           <h1 class="hero-name">
             <span class="line"><span>${t(p.first)}</span></span>
-            <span class="line"><span class="outline">${t(p.last)}</span></span>
+            <span class="line"><span class="grad-text">${t(p.last)}</span></span>
           </h1>
-          <p class="hero-role reveal" style="--d:2"><span class="prompt">&gt;_</span><span id="typed" aria-live="off"></span><span class="caret" aria-hidden="true"></span></p>
+          <p class="hero-role reveal" style="--d:2"><span class="prompt">~$</span><span id="typed" aria-live="off"></span><span class="caret" aria-hidden="true"></span></p>
           <p class="hero-lead reveal" style="--d:3">${t(CV.ui.heroLead)}</p>
           <div class="hero-cta reveal" style="--d:4">
-            <a class="btn btn-primary magnetic" href="#work">${t(CV.ui.ctaWork)} ${icon('arrow', 'i-go')}</a>
-            <a class="btn magnetic" href="#contact">${t(CV.ui.ctaContact)}</a>
-            <button class="btn magnetic" type="button" data-action="print">${icon('download')} ${t(CV.ui.ctaCv)}</button>
+            <a class="btn btn-primary" href="#work">${t(CV.ui.ctaWork)} ${icon('arrow', 'i-go')}</a>
+            <button class="btn" type="button" data-action="terminal">${icon('terminal')} ${t(CV.ui.ctaTerminal)} <kbd>\`</kbd></button>
+            <button class="btn" type="button" data-action="print">${icon('download')} ${t(CV.ui.ctaCv)}</button>
           </div>
           <div class="hero-stats reveal" style="--d:5">
             ${stats().map((s) => `<div class="stat"><b><span data-count="${s.v}">${num(s.v)}</span><sup>${s.suf}</sup></b><span>${t(s.label)}</span></div>`).join('')}
           </div>
         </div>
         <div class="hero-side">
-          <div class="viewfinder" id="vf">
-            <div class="hero-photo"><img src="assets/img/profile.webp" alt="${esc(t(p.name))}" width="900" height="900" fetchpriority="high"></div>
-            <div class="vf-overlay">
-              <div class="vf-grid"></div>
-              <div class="vf-focus" id="vf-focus"></div>
-              <i class="vf-corner tl"></i><i class="vf-corner tr"></i><i class="vf-corner bl"></i><i class="vf-corner br"></i>
-              <div class="vf-top"><span class="vf-rec"><span class="dot"></span>REC <span id="timecode">00:00:00:00</span></span><span>4K · 25P</span></div>
-              <div class="vf-bottom"><span>f/1.8 &nbsp;1/250 &nbsp;ISO 200</span><span style="display:flex;gap:10px;align-items:center"><span class="vf-meter"><i></i><i></i><i></i><i></i></span><span class="vf-battery"><i></i><i></i><i></i><i></i></span></span></div>
-            </div>
+          <div class="photo-card">
+            <img src="assets/img/profile.webp" alt="${esc(t(p.name))}" width="900" height="900" fetchpriority="high">
+            <span class="badge"><span class="dot pulse"></span><b>&lt;Amin /&gt;</b> online</span>
           </div>
-          <div class="tag tag-1">${icon('code')} React · TypeScript</div>
-          <div class="tag tag-2">${icon('camera')} ${lang === 'fa' ? 'با نگاه کارگردان' : "Director's eye"}</div>
+          <span class="float-chip c1">${icon('react')} React 19</span>
+          <span class="float-chip c2">${icon('code')} Next.js · TS</span>
+          <div class="editor" aria-label="amin.tsx">
+            <div class="editor-bar"><span class="lights"><i></i><i></i><i></i></span><span class="tab">${icon('react')}amin.tsx</span></div>
+            <pre><code id="code"></code></pre>
+            <div class="editor-status"><span>${icon('branch')} main</span><span>✓ 0 problems · TypeScript</span></div>
+          </div>
         </div>
       </div>
       <a class="scroll-cue" href="#about" aria-label="${t(CV.ui.scroll)}"><span></span>${t(CV.ui.scroll)}</a>`;
@@ -109,10 +166,10 @@
     const widths = [92, 96, 88];
     $('#about').innerHTML = `
       <div class="wrap">
-        ${sceneHead(1, 'about', t(CV.ui.aboutTitle))}
+        ${secHead(1, 'about', t(CV.ui.aboutTitle))}
         <div class="bento">
           <article class="card about-text reveal">
-            <div class="card-label">${icon('film')} ${lang === 'fa' ? 'خلاصهٔ داستان' : 'Synopsis'}</div>
+            <div class="card-label">${icon('file')} README.md</div>
             ${CV.about.paragraphs.map((x) => `<p>${t(x)}</p>`).join('')}
           </article>
           <article class="card about-now reveal" style="--d:1">
@@ -127,7 +184,7 @@
             <div class="chips">${CV.about.interests.map((x) => `<span class="chip">${icon(x.icon)}${t(x)}</span>`).join('')}</div>
           </article>
           <article class="card about-os reveal" style="--d:1">
-            <div class="card-label">${icon('cpu')} ${t(CV.ui.personalityTitle)}</div>
+            <div class="card-label">${icon('cpu')} personality.config</div>
             <div class="os-grid">
               ${CV.about.personality.map((x, i) => `
                 <div class="os-item">
@@ -138,12 +195,19 @@
                 </div>`).join('')}
             </div>
           </article>
+          <article class="card about-gh reveal" id="gh-card">
+            <div class="gh-head">
+              <div class="card-label">${icon('github')} ${t(CV.ui.githubTitle)}</div>
+              <a class="link-go" href="https://github.com/Aminkrimi" target="_blank" rel="noopener">github.com/Aminkrimi ${icon('arrow', 'i-go')}</a>
+            </div>
+            <div class="gh-graph"><img src="https://ghchart.rshah.org/2563eb/Aminkrimi" alt="GitHub contributions of Aminkrimi" loading="lazy" onerror="document.getElementById('gh-card').remove()"></div>
+          </article>
         </div>
         <h3 class="services-title reveal">${t(CV.ui.servicesTitle)}</h3>
         <div class="services">
           ${CV.services.map((s, i) => `
             <article class="card service reveal" style="--d:${i}">
-              <span class="num">${num(pad(i + 1))} / ${num(pad(CV.services.length))}</span>
+              <span class="num">${pad(i + 1)} / ${pad(CV.services.length)}</span>
               <span class="ico">${icon(s.icon)}</span>
               <h3>${t(s.title)}</h3>
               <p>${t(s.desc)}</p>
@@ -155,17 +219,17 @@
   function renderSkills() {
     $('#skills').innerHTML = `
       <div class="wrap">
-        ${sceneHead(2, 'skills', t(CV.ui.skillsTitle), t(CV.ui.skillsLead))}
+        ${secHead(2, 'skills', t(CV.ui.skillsTitle), t(CV.ui.skillsLead))}
         <div class="skills-grid">
           ${CV.skills.map((g, gi) => `
             <article class="card skill-group reveal" style="--d:${gi}">
-              <h3>${t(g.group)} <small>CH-${pad(gi + 1)}</small></h3>
+              <h3>${t(g.group)} <small>${['core', 'ui', 'tooling', 'backend'][gi] || 'misc'}.ts</small></h3>
               ${g.items.map((s, si) => `
                 <div class="skill">
                   <span class="skill-name">${s.name}</span>
                   <span style="display:flex;align-items:center;gap:12px">
                     <span class="meter" role="img" aria-label="${s.level}/5" style="--row:${si}">
-                      ${[1, 2, 3, 4, 5].map((k) => `<i class="${k <= s.level ? 'on' : ''} ${k === 5 && s.level === 5 ? 'peak' : ''}" style="--k:${k}"></i>`).join('')}
+                      ${[1, 2, 3, 4, 5].map((k) => `<i class="${k <= s.level ? 'on' : ''}" style="--k:${k}"></i>`).join('')}
                     </span>
                     <span class="skill-level">${t(LEVELS[s.level])}</span>
                   </span>
@@ -179,18 +243,20 @@
       </div>`;
   }
 
+  const HASHES = ['a3f9c21', '7be04d9', '4c2e81f', '19d7a3b', 'e5b6f02'];
   function renderExperience() {
     const e = CV.education[0];
     $('#experience').innerHTML = `
       <div class="wrap">
-        ${sceneHead(3, 'experience', t(CV.ui.experienceTitle))}
+        ${secHead(3, 'experience', t(CV.ui.experienceTitle))}
         <div class="timeline-wrap">
           <div class="timeline" id="timeline">
             ${CV.experience.map((j, i) => `
               <article class="card job reveal" style="--d:${i % 2}">
+                <span class="hash">commit ${HASHES[i % HASHES.length]}${i === 0 ? ' (HEAD → main)' : ''}</span>
                 <div class="job-head">
                   <div>
-                    <h3>${t(j.title)}${i === 0 ? `<span class="live"><span class="dot"></span>LIVE</span>` : ''}</h3>
+                    <h3>${t(j.title)}${i === 0 ? `<span class="live"><span class="dot"></span>HEAD</span>` : ''}</h3>
                     <div class="org">${t(j.org)}</div>
                   </div>
                   <span class="period">${t(j.period)}</span>
@@ -210,15 +276,16 @@
       </div>`;
   }
 
-  const mockHTML = () => `
+  const mockHTML = (url) => `
     <div class="mock" aria-hidden="true">
-      <div class="mock-side"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="mock-main">
-        <div class="mock-kpis">
-          <div>Clinics<b>128</b></div><div>Dentists<b>1.4k</b></div><div>Jobs<b>312</b></div><div>Leads<b>86</b></div>
+      <div class="mock-url"><span class="lights"><i></i><i></i><i></i></span><span>${esc(url)}</span></div>
+      <div class="mock-body">
+        <div class="mock-main">
+          <div class="mock-kpis">${'<div><i></i><b></b></div>'.repeat(4)}</div>
+          <div class="mock-chart">${[38, 52, 44, 70, 58, 66, 49, 82, 61, 74, 57, 92].map((h, k) => `<i style="--h:${h}%;--k:${k}"></i>`).join('')}</div>
+          <div class="mock-rows">${'<div><span></span><span></span><span></span><span></span></div>'.repeat(4)}</div>
         </div>
-        <div class="mock-chart">${[38, 52, 44, 70, 58, 66, 49, 82, 61, 74, 57, 92].map((h, k) => `<i style="--h:${h}%;--k:${k}"></i>`).join('')}</div>
-        <div class="mock-rows">${'<div><span></span><span></span><span></span><span></span></div>'.repeat(4)}</div>
+        <div class="mock-side"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>`;
 
@@ -230,19 +297,19 @@
   };
 
   function projectCard(p, i) {
+    const host = (p.url || '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    const img = p.img ? `<img src="${p.img}" alt="${esc(t(p.title))}" loading="lazy" decoding="async" width="1100" height="520"${p.mock ? ' onerror="this.remove()"' : ''}>` : '';
     const media = p.mock
-      ? mockHTML()
+      ? mockHTML(host) + img
       : p.img
-        ? `<img src="${p.img}" alt="${esc(t(p.title))}" loading="lazy" decoding="async" width="1100" height="520">`
+        ? img
         : `<div class="glyph">${icon(p.glyph)}<span class="code-line">${esc(CODE_LINES[p.glyph] || '')}</span></div>`;
     const link = p.url
-      ? `<a class="link-go" href="${p.url}" target="_blank" rel="noopener">${t(CV.ui.visit)} ${icon('arrow')}</a>`
-      : p.code
-        ? `<a class="link-go" href="${p.code}" target="_blank" rel="noopener">${icon('github')} ${t(CV.ui.source)}</a>`
-        : `<span class="nda">${icon('lock')} ${t(CV.ui.confidential)}</span>`;
+      ? `<a class="link-go" href="${p.url}" target="_blank" rel="noopener">${t(CV.ui.visit)} ${icon('arrow', 'i-go')}</a>`
+      : `<a class="link-go" href="${p.code}" target="_blank" rel="noopener">${icon('github')} ${t(CV.ui.source)}</a>`;
     return `
       <article class="card project reveal ${p.featured ? 'featured' : ''}" data-cat="${p.cat.join(' ')}" style="--d:${i % 3}">
-        <div class="project-media">${media}<span class="frame-no">FRAME ${pad(i + 1)}</span></div>
+        <div class="project-media">${media}${p.mock ? '' : `<span class="idx">#${pad(i + 1)}${host ? ` · ${host}` : ''}</span>`}</div>
         <div class="project-body">
           <h3>${t(p.title)}</h3>
           <p>${t(p.desc)}</p>
@@ -259,7 +326,7 @@
     const count = (id) => (id === 'all' ? CV.projects.length : CV.projects.filter((p) => p.cat.includes(id)).length);
     $('#work').innerHTML = `
       <div class="wrap">
-        ${sceneHead(4, 'work', t(CV.ui.workTitle), t(CV.ui.workLead))}
+        ${secHead(4, 'work', t(CV.ui.workTitle), t(CV.ui.workLead))}
         <div class="filters reveal" role="toolbar">
           ${CV.filters.map((f) => `<button class="filter" type="button" data-filter="${f.id}" aria-pressed="${f.id === activeFilter}">${f.id === 'all' ? t(CV.ui.filterAll) : t(f)}<sup>${num(count(f.id))}</sup></button>`).join('')}
         </div>
@@ -273,11 +340,11 @@
     $('#contact').innerHTML = `
       <div class="wrap">
         <div class="contact-box reveal">
-          <div class="scene-label"><span class="num">SC-05</span><span>${t(CV.ui.scene)} ${num('05')} — ${t(CV.ui.nav.contact)}</span><span class="rule"></span><span class="take">FINAL TAKE</span></div>
+          <div class="sec-label"><span class="num">05</span><span class="file">${icon('file')}${FILES.contact}</span><span class="rule"></span><span>${t(CV.ui.nav.contact)}</span></div>
           <h2 class="contact-title">${t(CV.ui.contactTitle)}</h2>
           <p class="contact-lead">${t(CV.ui.contactLead)}</p>
-          <div class="email-row">
-            <a class="email-big" href="mailto:${p.email}">${p.email}</a>
+          <div class="cmd-line">
+            <span class="cmd"><span class="p">$</span> mail <a href="mailto:${p.email}">${p.email}</a></span>
             <button class="ctrl" type="button" data-action="copy-email">${icon('copy')} <span>${t(CV.ui.copyEmail)}</span></button>
           </div>
           <div class="socials">
@@ -299,7 +366,7 @@
   function renderFooter() {
     $('#footer').innerHTML = `
       <div class="wrap">
-        <p class="wrap-word" aria-hidden="true">${lang === 'fa' ? 'کات! برداشت آخر' : "That's a wrap."}</p>
+        <p class="big" aria-hidden="true">&lt;Thanks /&gt;</p>
         <div class="footer-in">
           <span>© ${num(new Date().getFullYear())} ${t(CV.person.name)} — ${t(CV.ui.footer)}</span>
           <span>${t(CV.ui.builtWith)}</span>
@@ -314,11 +381,11 @@
     const L = (fa, en) => (lang === 'fa' ? fa : en);
     $('#print-cv').innerHTML = `
       <header class="pcv-head">
-        <div><h1>${t(p.name)}</h1><div class="role">${t(p.role)} · React · TypeScript</div><div>${t(p.location)}</div></div>
+        <div><h1>${t(p.name)}</h1><div class="role">${t(p.role)} · React · Next.js · TypeScript</div><div>${t(p.location)}</div></div>
         <div class="pcv-contact"><span>${p.email}</span><span>${p.phone}</span><span>github.com/Aminkrimi</span><span>t.me/AminKrimi</span></div>
       </header>
       <h2>${L('درباره', 'Profile')}</h2>
-      <p>${t(CV.about.paragraphs[0])} ${t(CV.about.paragraphs[1]).split(/[.؛]/)[0]}.</p>
+      <p>${t(CV.about.paragraphs[0])} ${t(CV.about.paragraphs[1])}</p>
       <h2>${L('تجربه', 'Experience')}</h2>
       ${CV.experience.map((j) => `<div class="pcv-job"><div class="row">${t(j.title)} — ${t(j.org)}<span>${t(j.period)}</span></div><ul>${t(j.points).map((x) => `<li>${x}</li>`).join('')}</ul></div>`).join('')}
       <h2>${L('مهارت‌ها', 'Skills')}</h2>
@@ -326,9 +393,7 @@
       <h2>${L('نمونه‌کارها', 'Selected Projects')}</h2>
       <div class="pcv-proj">${CV.projects.map((x) => `<div><b>${t(x.title)}</b> — ${t(x.desc)} <span>${(x.url || x.code || '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span></div>`).join('')}</div>
       <h2>${L('تحصیلات', 'Education')}</h2>
-      <div class="pcv-job"><div class="row">${t(CV.education[0].period)} ${t(CV.education[0].title)} — ${t(CV.education[0].org)}</div></div>
-      <h2>${L('شخصیت', 'Personality')}</h2>
-      <p>${CV.about.personality.map((x) => `${x.code} (${t(x.label)})`).join(' · ')}</p>`;
+      <div class="pcv-job"><div class="row">${t(CV.education[0].period)} ${t(CV.education[0].title)} — ${t(CV.education[0].org)}</div></div>`;
   }
 
   function renderAll() {
@@ -409,24 +474,13 @@
     SECTIONS.forEach((id) => navIO.observe($('#' + id)));
   }
 
-  // --- Clocks & timecode
+  // --- Clocks
   function tickClocks() {
     const fmt = new Intl.DateTimeFormat(lang === 'fa' ? 'fa-IR' : 'en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: CV.person.timezone });
     const now = fmt.format(new Date());
     $$('[data-clock]').forEach((el) => { el.textContent = now; });
   }
   setInterval(tickClocks, 1000);
-
-  const t0 = performance.now();
-  (function timecode() {
-    const el = $('#timecode');
-    if (el) {
-      const ms = performance.now() - t0;
-      const f = Math.floor((ms % 1000) / 40), s = Math.floor(ms / 1000);
-      el.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}:${pad(f)}`;
-    }
-    requestAnimationFrame(timecode);
-  })();
 
   // --- Project filter
   function applyFilter(id, animate = true) {
@@ -443,32 +497,7 @@
     else run();
   }
 
-  // --- Viewfinder interactions
-  function bindViewfinder() {
-    const vf = $('#vf'), focus = $('#vf-focus');
-    if (!vf) return;
-    vf.addEventListener('pointermove', (e) => {
-      const r = vf.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-      vf.style.setProperty('--px', `${(0.5 - x) * 14}px`);
-      vf.style.setProperty('--py', `${(0.5 - y) * 14}px`);
-      vf.style.setProperty('--fx', `${x * 100}%`);
-      vf.style.setProperty('--fy', `${y * 100}%`);
-      focus.classList.remove('locked');
-    });
-    vf.addEventListener('pointerleave', () => {
-      ['--px', '--py', '--fx', '--fy'].forEach((p) => vf.style.removeProperty(p));
-    });
-    vf.addEventListener('click', () => { focus.classList.add('locked'); shoot(); });
-  }
-
-  function shoot() {
-    const f = $('.flash');
-    f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
-    toast('📸 ' + (lang === 'fa' ? 'چیلیک! قاب ثبت شد' : 'Click! Frame captured'));
-  }
-
-  // --- Card spotlight + tilt, magnetic buttons
+  // --- Card spotlight
   function bindPointerFX() {
     if (!finePointer || reduced) return;
     $$('.card').forEach((card) => {
@@ -476,48 +505,8 @@
         const r = card.getBoundingClientRect();
         card.style.setProperty('--mx', `${e.clientX - r.left}px`);
         card.style.setProperty('--my', `${e.clientY - r.top}px`);
-        if (card.classList.contains('project')) {
-          const rx = ((e.clientY - r.top) / r.height - 0.5) * -5;
-          const ry = ((e.clientX - r.left) / r.width - 0.5) * 5;
-          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
-        }
       });
-      card.addEventListener('pointerleave', () => { card.style.transform = ''; });
     });
-    $$('.magnetic').forEach((b) => {
-      b.addEventListener('pointermove', (e) => {
-        const r = b.getBoundingClientRect();
-        b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.18}px, ${(e.clientY - r.top - r.height / 2) * 0.25}px)`;
-      });
-      b.addEventListener('pointerleave', () => { b.style.transform = ''; });
-    });
-  }
-
-  // --- Viewfinder cursor: follows the pointer, frames links & buttons
-  function initCursor() {
-    if (!finePointer || reduced) return;
-    const c = $('.cursor');
-    doc.classList.add('has-cursor');
-    let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, w = 34, h = 34, tw = 34, th = 34, target = null;
-    addEventListener('pointermove', (e) => {
-      x = e.clientX; y = e.clientY; c.style.opacity = 1;
-      const el = e.target.closest?.('a, button, .chip, input');
-      target = el && !el.closest('.palette') ? el : null;
-    }, { passive: true });
-    document.addEventListener('pointerleave', () => { c.style.opacity = 0; });
-    const loop = () => {
-      let gx = x, gy = y;
-      if (target) {
-        const r = target.getBoundingClientRect();
-        tw = r.width + 14; th = r.height + 14; gx = r.left + r.width / 2; gy = r.top + r.height / 2;
-        c.classList.add('snap');
-      } else { tw = th = 34; c.classList.remove('snap'); }
-      cx += (gx - cx) * 0.22; cy += (gy - cy) * 0.22; w += (tw - w) * 0.22; h += (th - h) * 0.22;
-      c.style.width = w + 'px'; c.style.height = h + 'px';
-      c.style.transform = `translate(${cx - w / 2}px, ${cy - h / 2}px)`;
-      requestAnimationFrame(loop);
-    };
-    loop();
   }
 
   // --- Scroll-driven bits
@@ -525,15 +514,12 @@
   function onScroll() {
     const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
     $('.progress span').style.transform = `scaleX(${max > 0 ? y / max : 0})`;
-    const bar = $('.topbar');
-    bar.classList.toggle('hide', y > 500 && y > lastY);
+    $('.topbar').classList.toggle('hide', y > 500 && y > lastY);
     lastY = y;
-    if (y < innerHeight) $('#hero').style.setProperty('--scroll', y);
     const tl = $('#timeline');
     if (tl) {
       const r = tl.getBoundingClientRect();
-      const k = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height));
-      tl.style.setProperty('--tl', k);
+      tl.style.setProperty('--tl', Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height)));
     }
   }
   addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
@@ -595,33 +581,135 @@
   }
   const toggleLang = () => setLang(lang === 'fa' ? 'en' : 'fa');
 
-  // --- Director mode (Konami code / palette)
-  function toggleDirector() {
-    doc.classList.toggle('director');
-    toast(doc.classList.contains('director') ? t(CV.ui.easter) : (lang === 'fa' ? 'حالت عادی' : 'Back to normal'));
+  /* ================= Terminal ================= */
+  const term = { open: false, history: [], hpos: 0 };
+  const L = (fa, en) => (lang === 'fa' ? fa : en);
+  function tprint(html, cls = '') {
+    const d = document.createElement('div');
+    d.className = `out ${cls}`;
+    d.innerHTML = html;
+    $('#term-out').append(d);
+    $('#term-body').scrollTop = $('#term-body').scrollHeight;
+  }
+  const faOut = (html) => tprint(html, lang === 'fa' ? 'fa' : '');
+
+  const TERM_CMDS = {
+    help() {
+      tprint(`<span class="t-y">${L('فرمان‌های موجود', 'Available commands')}:</span>
+  <span class="t-a">whoami</span>      ${L('من کی هستم', 'who am I')}
+  <span class="t-a">about</span>       ${L('درباره من', 'short bio')}
+  <span class="t-a">skills</span>      ${L('مهارت‌ها', 'tech stack')}
+  <span class="t-a">experience</span>  ${L('سوابق کاری', 'work history (git log)')}
+  <span class="t-a">projects</span>    ${L('نمونه‌کارها', 'list projects')}
+  <span class="t-a">open</span> &lt;id&gt;   ${L('باز کردن پروژه', 'open a project')}
+  <span class="t-a">contact</span>     ${L('راه‌های ارتباط', 'how to reach me')}
+  <span class="t-a">theme</span>       ${L('تغییر تم', 'toggle theme')}
+  <span class="t-a">lang</span>        ${L('تغییر زبان', 'switch language')}
+  <span class="t-a">cv</span>          ${L('دانلود رزومه', 'print / save CV')}
+  <span class="t-a">clear</span>       ${L('پاک کردن صفحه', 'clear screen')}
+  <span class="t-a">exit</span>        ${L('بستن ترمینال', 'close terminal')}`);
+    },
+    whoami() { tprint(`<span class="t-w">${esc(CV.person.name.en)}</span> — ${esc(CV.person.role.en)} <span class="t-m">@ ${esc(CV.person.location.en)}</span>`); },
+    about() { CV.about.paragraphs.forEach((x) => faOut(esc(t(x)))); },
+    skills() {
+      CV.skills.forEach((g) => {
+        tprint(`<span class="t-y">▸ ${esc(g.group.en)}</span>`);
+        g.items.forEach((s) => tprint(`  ${esc(s.name.padEnd(24))} <span class="t-d">${'█'.repeat(s.level)}</span><span class="t-m">${'░'.repeat(5 - s.level)}</span>`));
+      });
+    },
+    experience() {
+      CV.experience.forEach((j, i) => {
+        tprint(`<span class="t-y">commit ${HASHES[i % HASHES.length]}</span>${i === 0 ? ' <span class="t-a">(HEAD → main)</span>' : ''}`);
+        faOut(`<span class="t-w">${esc(t(j.title))}</span> — ${esc(t(j.org))} <span class="t-m">[${esc(t(j.period))}]</span>`);
+      });
+    },
+    projects() {
+      CV.projects.forEach((p) => tprint(`  <span class="t-a">${p.id.padEnd(13)}</span> ${esc(p.title.en)} <span class="t-m">${esc(p.stack.join(', '))}</span>`));
+      tprint(`<span class="t-m">${L('برای باز کردن: open <id>', 'Try: open <id>')}</span>`.replace(/<id>/, '&lt;id&gt;'));
+    },
+    open(arg) {
+      const p = CV.projects.find((x) => x.id === arg);
+      if (!p) return tprint(`<span class="t-e">${L('پروژه پیدا نشد', 'project not found')}:</span> ${esc(arg || '')}`);
+      const url = p.url || p.code;
+      tprint(`${L('در حال باز کردن', 'opening')} <a href="${url}" target="_blank" rel="noopener">${esc(url)}</a> …`);
+      window.open(url, '_blank', 'noopener');
+    },
+    contact() {
+      CV.person.social.forEach((s) => tprint(`  ${s.label.padEnd(10)} <a href="${s.url}" target="_blank" rel="noopener">${esc(s.handle)}</a>`));
+    },
+    theme() { toggleTheme(); tprint(`<span class="t-p">✓</span> theme → ${doc.dataset.theme === 'dark' ? 'light' : 'dark'}`); },
+    lang() { closeTerm(); toggleLang(); },
+    cv() { closeTerm(); setTimeout(() => window.print(), 100); },
+    clear() { $('#term-out').innerHTML = ''; },
+    exit() { closeTerm(); },
+    date() { tprint(new Date().toString()); },
+    ls() { tprint(Object.values(FILES).map((f) => `<span class="${f.endsWith('/') ? 't-d' : 't-w'}">${f}</span>`).join('  ')); },
+    sudo() { tprint(`<span class="t-e">${L('دسترسی رد شد 😄 ولی می‌تونی منو استخدام کنی:', "Permission denied 😄 — but you can hire me instead:")}</span> <a href="mailto:${CV.person.email}">${CV.person.email}</a>`); },
+    echo(...a) { tprint(esc(a.join(' '))); }
+  };
+  const ALIASES = { exp: 'experience', work: 'projects', ls: 'ls', cat: 'about', '?': 'help', 'hire-me': 'sudo' };
+
+  function runTerm(line) {
+    const raw = line.trim();
+    tprint(`<span class="t-p">amin@karimi</span><span class="t-m">:</span><span class="t-d">~</span><span class="t-m">$</span> <span class="t-w">${esc(raw)}</span>`);
+    if (!raw) return;
+    term.history.push(raw); term.hpos = term.history.length;
+    const [cmd0, ...args] = raw.split(/\s+/);
+    const cmd = ALIASES[cmd0.toLowerCase()] || cmd0.toLowerCase();
+    const fn = TERM_CMDS[cmd];
+    if (fn) fn(...args);
+    else tprint(`<span class="t-e">command not found:</span> ${esc(cmd0)} — ${L('برای راهنما help را تایپ کن', 'type <span class="t-a">help</span>')}`);
   }
 
-  // --- Command palette
+  function openTerm() {
+    if (term.open) return;
+    closePalette(false);
+    $('#term').hidden = false; term.open = true;
+    if (!$('#term-out').childElementCount) {
+      tprint(`<span class="t-d">amin-karimi</span> <span class="t-m">v${new Date().getFullYear() - CV.person.startYear}.0.0 · ${new Date().toDateString()}</span>`);
+      tprint(L('خوش اومدی! برای دیدن فرمان‌ها <span class="t-a">help</span> رو تایپ کن.', 'Welcome! Type <span class="t-a">help</span> to see what you can do.'), lang === 'fa' ? 'fa' : '');
+    }
+    setTimeout(() => $('#term-input').focus(), 20);
+  }
+  function closeTerm() { if (!term.open) return; $('#term').hidden = true; term.open = false; }
+
+  $('#term-input').addEventListener('keydown', (e) => {
+    const input = e.currentTarget;
+    if (e.key === 'Enter') { runTerm(input.value); input.value = ''; }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (term.hpos > 0) input.value = term.history[--term.hpos]; }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); term.hpos = Math.min(term.history.length, term.hpos + 1); input.value = term.history[term.hpos] || ''; }
+    else if (e.key === 'Tab') {
+      e.preventDefault();
+      const v = input.value.toLowerCase();
+      const [c, a] = v.split(/\s+/);
+      if (c === 'open' && a !== undefined) { const m = CV.projects.find((p) => p.id.startsWith(a)); if (m) input.value = `open ${m.id}`; }
+      else { const m = Object.keys(TERM_CMDS).find((k) => k.startsWith(v)); if (m) input.value = m; }
+    }
+    else if (e.key === 'Escape') closeTerm();
+    else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); TERM_CMDS.clear(); }
+  });
+  $('#term').addEventListener('click', (e) => {
+    if (e.target.closest('[data-close]')) closeTerm();
+    else if (!e.target.closest('a') && !getSelection().toString()) $('#term-input').focus();
+  });
+
+  /* ================= Command palette ================= */
   const palette = { open: false, items: [], index: 0 };
   function commands() {
     const P = CV.ui.palette;
     const both = (o) => `${o.fa} ${o.en}`;
     const go = SECTIONS.map((id) => ({ label: `${t(P.goto)} ${t(CV.ui.nav[id])}`, kw: `${both(P.goto)} ${both(CV.ui.nav[id])}`, icon: 'arrow', run: () => $('#' + id).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }) }));
-    const list = [
+    return [
       ...go,
-      { label: t(P.theme), icon: doc.dataset.theme === 'dark' ? 'sun' : 'moon', key: 'T', run: () => toggleTheme() },
-      { label: t(P.lang), icon: 'globe', key: 'L', run: toggleLang },
-      { label: t(P.email), icon: 'copy', run: copyEmail },
-      { label: t(P.print), icon: 'download', run: () => window.print() },
-      { label: t(P.github), icon: 'github', run: () => open('https://github.com/Aminkrimi', '_blank', 'noopener') },
-      { label: t(P.telegram), icon: 'telegram', run: () => open('https://t.me/AminKrimi', '_blank', 'noopener') },
-      { label: t(P.shoot), icon: 'camera', run: shoot },
-      { label: lang === 'fa' ? 'حالت کارگردان 🎬' : 'Director mode 🎬', icon: 'film', run: toggleDirector },
+      { label: t(P.terminal), kw: both(P.terminal) + ' terminal shell', icon: 'terminal', key: '`', run: openTerm },
+      { label: t(P.theme), kw: both(P.theme), icon: doc.dataset.theme === 'dark' ? 'sun' : 'moon', key: 'T', run: () => toggleTheme() },
+      { label: t(P.lang), kw: both(P.lang), icon: 'globe', key: 'L', run: toggleLang },
+      { label: t(P.email), kw: both(P.email), icon: 'copy', run: copyEmail },
+      { label: t(P.print), kw: both(P.print) + ' cv pdf', icon: 'download', run: () => window.print() },
+      { label: t(P.github), kw: both(P.github), icon: 'github', run: () => open('https://github.com/Aminkrimi', '_blank', 'noopener') },
+      { label: t(P.telegram), kw: both(P.telegram), icon: 'telegram', run: () => open('https://t.me/AminKrimi', '_blank', 'noopener') },
       { label: t(P.top), kw: both(P.top), icon: 'up', run: () => scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }) }
     ];
-    const kws = [P.theme, P.lang, P.email, P.print, P.github, P.telegram, P.shoot, { fa: 'حالت کارگردان', en: 'Director mode' }];
-    list.slice(go.length, go.length + kws.length).forEach((c, i) => { c.kw = both(kws[i]); });
-    return list;
   }
   function drawPalette() {
     const q = $('#palette-input').value.trim().toLowerCase();
@@ -633,16 +721,20 @@
     $('[aria-selected="true"]', $('#palette-list'))?.scrollIntoView({ block: 'nearest' });
   }
   function openPalette() {
-    const el = $('#palette');
-    el.hidden = false; palette.open = true; palette.index = 0;
+    closeTerm();
+    $('#palette').hidden = false; palette.open = true; palette.index = 0;
     const input = $('#palette-input');
     input.value = ''; input.placeholder = t(CV.ui.palette.placeholder);
     $('#palette-foot').textContent = lang === 'fa' ? '↑↓ انتخاب · ↵ اجرا · esc بستن' : '↑↓ navigate · ↵ run · esc close';
     drawPalette();
     setTimeout(() => input.focus(), 10);
   }
-  function closePalette() { $('#palette').hidden = true; palette.open = false; $('#btn-cmd').focus(); }
-  function runPalette(i) { const c = palette.items[i]; if (!c) return; closePalette(); setTimeout(c.run, 60); }
+  function closePalette(refocus = true) {
+    if (!palette.open) return;
+    $('#palette').hidden = true; palette.open = false;
+    if (refocus) $('#btn-cmd').focus();
+  }
+  function runPalette(i) { const c = palette.items[i]; if (!c) return; closePalette(false); setTimeout(c.run, 60); }
 
   $('#palette-input').addEventListener('input', () => { palette.index = 0; drawPalette(); });
   $('#palette-list').addEventListener('click', (e) => { const li = e.target.closest('li[data-i]'); if (li) runPalette(+li.dataset.i); });
@@ -653,10 +745,9 @@
   $('#palette').addEventListener('click', (e) => { if (e.target.dataset.close !== undefined) closePalette(); });
 
   // --- Global keyboard
-  const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-  let kpos = 0;
   addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette.open ? closePalette() : openPalette(); return; }
+    if (term.open) { if (e.key === 'Escape') closeTerm(); return; }
     if (palette.open) {
       if (e.key === 'Escape') closePalette();
       else if (e.key === 'ArrowDown') { e.preventDefault(); palette.index = (palette.index + 1) % Math.max(1, palette.items.length); drawPalette(); }
@@ -664,11 +755,10 @@
       else if (e.key === 'Enter') { e.preventDefault(); runPalette(palette.index); }
       return;
     }
-    kpos = e.key === KONAMI[kpos] || e.key.toLowerCase() === KONAMI[kpos] ? kpos + 1 : (e.key === KONAMI[0] ? 1 : 0);
-    if (kpos === KONAMI.length) { kpos = 0; toggleDirector(); }
     if (e.target.closest('input, textarea, [contenteditable]') || e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key.toLowerCase();
-    if (k === 't') toggleTheme();
+    if (k === '`' || k === '~') { e.preventDefault(); openTerm(); }
+    else if (k === 't') toggleTheme();
     else if (k === 'l') toggleLang();
     else if (k === '/') { e.preventDefault(); openPalette(); }
   });
@@ -680,6 +770,7 @@
       const act = a.dataset.action;
       if (act === 'print') window.print();
       if (act === 'copy-email') copyEmail();
+      if (act === 'terminal') openTerm();
     }
     const f = e.target.closest('[data-filter]');
     if (f) applyFilter(f.dataset.filter);
@@ -687,39 +778,42 @@
   $('#btn-theme').addEventListener('click', (e) => toggleTheme(e.currentTarget));
   $('#btn-lang').addEventListener('click', toggleLang);
   $('#btn-cmd').addEventListener('click', openPalette);
+  $('#btn-term').addEventListener('click', openTerm);
   addEventListener('beforeprint', renderPrint);
 
   function afterRender() {
     observeReveals();
     observeSections();
     startTyping();
-    bindViewfinder();
+    typeCode();
     bindPointerFX();
     tickClocks();
     onScroll();
   }
 
-  // --- Slate intro (once per session)
-  function slate() {
+  // --- Boot intro (once per session)
+  function boot() {
     let seen = false;
-    try { seen = sessionStorage.getItem('cv-slate') === '1'; sessionStorage.setItem('cv-slate', '1'); } catch { /* ignore */ }
+    try { seen = sessionStorage.getItem('cv-boot') === '1'; sessionStorage.setItem('cv-boot', '1'); } catch { /* ignore */ }
     if (seen || reduced) return;
-    const d = new Date();
     const el = document.createElement('div');
-    el.className = 'slate';
+    el.className = 'boot';
     el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = `<div class="slate-board"><div class="slate-top"></div><div class="slate-body">
-      <div class="full"><small>PRODUCTION</small><b>PORTFOLIO — ${d.getFullYear()}</b></div>
-      <div><small>SCENE</small><b>01</b></div><div><small>TAKE</small><b>01</b></div>
-      <div><small>DIRECTOR</small><b>M. A. KARIMI</b></div><div><small>DATE</small><b>${pad(d.getDate())}.${pad(d.getMonth() + 1)}</b></div>
-    </div></div>`;
+    el.innerHTML = '<pre></pre>';
     document.body.append(el);
-    setTimeout(() => el.classList.add('done'), 1250);
-    setTimeout(() => el.remove(), 2000);
+    const lines = [
+      '<span class="dim">~/portfolio</span> <span class="acc">$</span> npm run dev',
+      '<span class="dim">&gt; amin-karimi@latest dev</span>',
+      '<span class="acc">▲</span> Next.js · ready in <span class="acc">312ms</span>',
+      '<span class="ok">✓</span> Compiled successfully'
+    ];
+    const pre = $('pre', el);
+    lines.forEach((l, i) => setTimeout(() => { pre.innerHTML += (i ? '\n' : '') + l; }, 120 + i * 220));
+    setTimeout(() => el.classList.add('done'), 1350);
+    setTimeout(() => el.remove(), 1900);
   }
 
-  slate();
+  boot();
   renderAll();
-  initCursor();
-  console.log('%c● REC %c Mohammad Amin Karimi — try ⌘K, T, L … or the Konami code 🎬', 'color:#ff3b2f;font-weight:bold', 'color:inherit');
+  console.log('%c</> %cMohammad Amin Karimi — try ⌘K, T, L, or ` for the terminal', 'color:#4d8dff;font-weight:bold', 'color:inherit');
 })();

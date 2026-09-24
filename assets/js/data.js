@@ -10,8 +10,8 @@ window.CV = {
     last: { fa: 'کریمی', en: 'Karimi' },
     role: { fa: 'توسعه‌دهندهٔ فرانت‌اند', en: 'Front-End Engineer' },
     roles: {
-      fa: ['توسعه‌دهندهٔ فرانت‌اند', 'مهندس React و TypeScript', 'طراح رابط کاربری', 'عکاس و فیلم‌بردار', 'کارگردان پخش زنده'],
-      en: ['Front-End Engineer', 'React & TypeScript Developer', 'UI Craftsman', 'Photographer & Filmmaker', 'Live-Stream Director']
+      fa: ['توسعه‌دهندهٔ فرانت‌اند', 'توسعه‌دهندهٔ React و Next.js', 'عاشق TypeScript', 'مهندس رابط کاربری', 'حل‌کنندهٔ مسئله'],
+      en: ['Front-End Engineer', 'React & Next.js Developer', 'TypeScript Enthusiast', 'UI Engineer', 'Problem Solver']
     },
     location: { fa: 'تهران، ایران', en: 'Tehran, Iran' },
     timezone: 'Asia/Tehran',
@@ -37,21 +37,21 @@ window.CV = {
       work: { fa: 'نمونه‌کار', en: 'Work' },
       contact: { fa: 'تماس', en: 'Contact' }
     },
-    scene: { fa: 'سکانس', en: 'Scene' },
-    heroKicker: { fa: 'در حال پخش زنده از تهران', en: 'Broadcasting live from Tehran' },
+    heroKicker: { fa: 'در حال کدنویسی از تهران', en: 'Shipping code from Tehran' },
     heroLead: {
-      fa: 'رابط‌هایی می‌سازم که مثل یک فیلم خوب، ریتم دارند؛ دقیق، سریع و به یاد ماندنی. از پنل‌های پیچیدهٔ SaaS تا وب‌سایت‌هایی که اولین برداشت را می‌برند.',
-      en: 'I build interfaces with the rhythm of a good film — precise, fast and memorable. From complex SaaS back-offices to websites that win the first take.'
+      fa: 'رابط‌های کاربری سریع، تمیز و دقیق با React، Next.js و TypeScript می‌سازم؛ از پلتفرم‌های پیچیدهٔ چندماژوله تا وب‌سایت‌هایی که از اولین اسکرول دیده می‌شوند.',
+      en: 'I build fast, clean and precise interfaces with React, Next.js and TypeScript — from complex multi-module platforms to websites that get noticed from the first scroll.'
     },
     ctaWork: { fa: 'دیدن نمونه‌کارها', en: 'See the work' },
-    ctaContact: { fa: 'بزن بریم', en: "Let's roll" },
+    ctaContact: { fa: 'شروع همکاری', en: "Let's talk" },
+    ctaTerminal: { fa: 'باز کردن ترمینال', en: 'Open terminal' },
     ctaCv: { fa: 'دانلود رزومه (PDF)', en: 'Download CV (PDF)' },
     scroll: { fa: 'اسکرول', en: 'Scroll' },
     yearsLabel: { fa: 'سال تجربه', en: 'Years shipping' },
     projectsLabel: { fa: 'پروژهٔ تحویل‌شده', en: 'Projects shipped' },
     stackLabel: { fa: 'تکنولوژی در جعبه‌ابزار', en: 'Tools in the kit' },
-    coffeeLabel: { fa: 'فنجان قهوه', en: 'Cups of coffee' },
-    aboutTitle: { fa: 'پشت دوربین، پشت کیبورد', en: 'Behind the camera, behind the keyboard' },
+    aboutTitle: { fa: 'کدی که تمیز است، محصولی که دیده می‌شود', en: 'Clean code, products that get noticed' },
+    githubTitle: { fa: 'فعالیت گیت‌هاب', en: 'GitHub activity' },
     personalityTitle: { fa: 'سیستم‌عامل شخصیتی', en: 'Personality OS' },
     interestsTitle: { fa: 'خارج از کد', en: 'Off the clock' },
     servicesTitle: { fa: 'کارهایی که انجام می‌دهم', en: 'What I do' },
@@ -72,7 +72,7 @@ window.CV = {
     visit: { fa: 'مشاهدهٔ سایت', en: 'Visit site' },
     source: { fa: 'سورس‌کد', en: 'Source' },
     confidential: { fa: 'محرمانه (NDA)', en: 'Under NDA' },
-    contactTitle: { fa: 'پروژهٔ بعدی رو با هم بسازیم', en: "Let's shoot the next project together" },
+    contactTitle: { fa: 'پروژهٔ بعدی رو با هم بسازیم', en: "Let's build the next thing together" },
     contactLead: {
       fa: 'ایده‌ای داری، تیمت به یک فرانت‌اند کار دقیق نیاز داره یا فقط می‌خوای سلام کنی؟ پیام بده؛ معمولاً همون روز جواب می‌دم.',
       en: 'Got an idea, need a detail-obsessed front-end engineer on your team, or just want to say hi? Drop a line — I usually reply the same day.'
@@ -80,8 +80,8 @@ window.CV = {
     copyEmail: { fa: 'کپی ایمیل', en: 'Copy email' },
     copied: { fa: 'کپی شد!', en: 'Copied!' },
     localTime: { fa: 'ساعت محلی', en: 'Local time' },
-    footer: { fa: 'کات! برداشت آخر.', en: "Cut! That's a wrap." },
-    builtWith: { fa: 'طراحی و کدنویسی با وسواس — بدون فریم‌ورک، فقط HTML, CSS و JS', en: 'Designed & hand-coded with obsession — no framework, just HTML, CSS & JS' },
+    footer: { fa: 'ساخته‌شده با ☕ و کد تمیز', en: 'Built with ☕ and clean code' },
+    builtWith: { fa: 'طراحی و کدنویسی دستی — بدون فریم‌ورک، فقط HTML, CSS و JS', en: 'Designed & hand-coded — no framework, just HTML, CSS & JS' },
     palette: {
       placeholder: { fa: 'یک فرمان تایپ کن…', en: 'Type a command…' },
       hint: { fa: 'فرمان‌ها', en: 'Commands' },
@@ -93,11 +93,10 @@ window.CV = {
       print: { fa: 'چاپ / ذخیرهٔ PDF رزومه', en: 'Print / save CV as PDF' },
       github: { fa: 'باز کردن گیت‌هاب', en: 'Open GitHub' },
       telegram: { fa: 'پیام در تلگرام', en: 'Message on Telegram' },
-      shoot: { fa: 'گرفتن یک عکس 📸', en: 'Take a shot 📸' },
+      terminal: { fa: 'باز کردن ترمینال', en: 'Open terminal' },
       top: { fa: 'برگشت به بالا', en: 'Back to top' }
     },
-    shortcuts: { fa: 'میانبرها: T تم · L زبان · ⌘K فرمان', en: 'Shortcuts: T theme · L language · ⌘K commands' },
-    easter: { fa: 'حالت کارگردان فعال شد 🎬', en: 'Director mode unlocked 🎬' },
+    shortcuts: { fa: 'میانبرها: T تم · L زبان · ` ترمینال · ⌘K فرمان', en: 'Shortcuts: T theme · L language · ` terminal · ⌘K commands' },
     themeLight: { fa: 'تم روشن', en: 'Light theme' },
     themeDark: { fa: 'تم تاریک', en: 'Dark theme' },
     skip: { fa: 'پرش به محتوا', en: 'Skip to content' }
@@ -106,12 +105,12 @@ window.CV = {
   about: {
     paragraphs: [
       {
-        fa: 'سلام! من محمد امین کریمی‌ام؛ توسعه‌دهندهٔ فرانت‌اند، متولد ۲۸ آذر ۱۳۷۸ و فارغ‌التحصیل کارشناسی علوم کامپیوتر از دانشگاه قم. از سال ۱۳۹۸ رابط کاربری می‌سازم — از وب‌سایت‌های شرکتی تا پنل‌های مدیریتی پیچیدهٔ SaaS با React و TypeScript.',
-        en: "Hi! I'm Mohammad Amin Karimi — a front-end engineer born in December 1999, with a B.Sc. in Computer Science from the University of Qom. I've been shipping interfaces since 2019, from company websites to complex SaaS back-offices built with React and TypeScript."
+        fa: 'سلام! من محمد امین کریمی‌ام؛ توسعه‌دهندهٔ فرانت‌اند، متولد ۲۸ آذر ۱۳۷۸ و فارغ‌التحصیل کارشناسی علوم کامپیوتر از دانشگاه قم. از سال ۱۳۹۸ رابط کاربری می‌سازم — از وب‌سایت‌های شرکتی تا پلتفرم‌های پیچیدهٔ چندماژوله با React، Next.js و TypeScript.',
+        en: "Hi! I'm Mohammad Amin Karimi — a front-end engineer born in December 1999, with a B.Sc. in Computer Science from the University of Qom. I've been shipping interfaces since 2019, from company websites to complex multi-module platforms built with React, Next.js and TypeScript."
       },
       {
-        fa: 'پشت دوربین هم کار می‌کنم: عکاسی، فیلم‌برداری و کارگردانی پخش زنده. همین نگاه کارگردانی را به کد می‌آورم؛ هر پیکسل قاب دارد، هر تعامل ریتم دارد و هر نسخه باید «یک‌برداشته» و بی‌نقص روی آنتن برود.',
-        en: 'I also work behind the camera — photography, videography and live-stream directing. I bring that director\'s eye to code: every pixel is framed, every interaction has rhythm, and every release should go on air in one clean take.'
+        fa: 'کمال‌گرایی‌ام را مستقیم وارد کد می‌کنم: کامپوننت‌های قابل استفادهٔ مجدد، تایپ‌های دقیق، رابط‌های RTL-first و ریسپانسیو، و توجه وسواس‌گونه به جزئیات UI و پرفورمنس. برایم مهم است که کد هم برای کاربر خوب کار کند و هم برای تیم خوانا بماند.',
+        en: 'I pour my perfectionism straight into code: reusable components, precise types, RTL-first responsive interfaces and an obsessive eye for UI detail and performance. Code should work beautifully for users and stay readable for the team.'
       },
       {
         fa: 'برون‌گرا، خون‌گرم و اهل کار تیمی‌ام. حل مسئله، کارهای چالشی و یادگیری مداوم انرژی‌ام را تأمین می‌کنند — و این روزها با ابزارهای هوش مصنوعی، سریع‌تر و دقیق‌تر از همیشه می‌سازم.',
@@ -137,7 +136,7 @@ window.CV = {
     {
       icon: 'code',
       title: { fa: 'مهندسی فرانت‌اند', en: 'Front-End Engineering' },
-      desc: { fa: 'اپلیکیشن‌های تک‌صفحه‌ای و پنل‌های مدیریتی با React و TypeScript؛ معماری تمیز، کامپوننت‌های قابل استفادهٔ مجدد و اتصال دقیق به API.', en: 'SPAs and admin panels in React & TypeScript — clean architecture, reusable components and tight API integration.' }
+      desc: { fa: 'اپلیکیشن‌ها و پنل‌های مدیریتی با React، Next.js و TypeScript؛ معماری تمیز، کامپوننت‌های قابل استفادهٔ مجدد و اتصال دقیق به API.', en: 'Apps and admin panels in React, Next.js & TypeScript — clean architecture, reusable components and tight API integration.' }
     },
     {
       icon: 'layout',
@@ -153,11 +152,6 @@ window.CV = {
       icon: 'chart',
       title: { fa: 'داده‌کاوی و یادگیری ماشین', en: 'Data & Machine Learning' },
       desc: { fa: 'تحلیل داده و پروژه‌های یادگیری ماشین با Python، Pandas و scikit-learn.', en: 'Data analysis and ML projects with Python, Pandas and scikit-learn.' }
-    },
-    {
-      icon: 'camera',
-      title: { fa: 'عکاسی، فیلم و پخش زنده', en: 'Photo, Film & Live' },
-      desc: { fa: 'عکاسی مدلینگ و صنعتی، فیلم‌برداری، راه‌اندازی تجهیزات و کارگردانی پخش زنده روی پلتفرم‌های مختلف.', en: 'Modeling & industrial photography, videography, live-stream rigging and directing across platforms.' }
     }
   ],
 
@@ -177,11 +171,11 @@ window.CV = {
       group: { fa: 'فریم‌ورک و UI', en: 'Frameworks & UI' },
       items: [
         { name: 'React 18 / 19', level: 5 },
+        { name: 'Next.js', level: 4 },
         { name: 'Hooks & State', level: 5 },
         { name: 'Tailwind CSS', level: 4 },
         { name: 'Bootstrap', level: 5 },
-        { name: 'jQuery & Ajax', level: 4 },
-        { name: 'UI / UX', level: 4 }
+        { name: 'jQuery & Ajax', level: 4 }
       ]
     },
     {
@@ -207,14 +201,14 @@ window.CV = {
       ]
     }
   ],
-  also: ['ASP.NET MVC', 'RBAC', 'i18n', 'Jupyter', 'Matplotlib', 'Seaborn', 'Figma', 'SEO', 'Web Vitals', 'Algorithms & DS', 'OBS / vMix', 'Lightroom'],
-  marquee: ['React', 'TypeScript', 'JavaScript', 'Vite', 'Tailwind', 'Sass', 'HTML5', 'CSS3', 'Bootstrap', 'Git', 'REST', 'PWA', 'Python', 'Pandas', 'scikit-learn', 'ASP.NET', 'SQL', 'Figma'],
+  also: ['SSR / SSG', 'ASP.NET MVC', 'RBAC', 'i18n', 'UI / UX', 'Figma', 'SEO', 'Web Vitals', 'Jupyter', 'Matplotlib', 'Algorithms & DS', 'Clean Code'],
+  marquee: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'Vite', 'Tailwind', 'Sass', 'HTML5', 'CSS3', 'Bootstrap', 'Git', 'REST', 'PWA', 'Python', 'Pandas', 'scikit-learn', 'ASP.NET', 'SQL', 'Figma'],
 
   experience: [
     {
       period: { fa: '۱۴۰۴ — اکنون', en: '2025 — Now' },
       title: { fa: 'توسعه‌دهندهٔ فرانت‌اند', en: 'Front-End Developer' },
-      org: { fa: 'پلتفرم SaaS سلامت (شبکهٔ کلینیک‌های دندان‌پزشکی)', en: 'Healthcare SaaS Platform (dental-clinic network)' },
+      org: { fa: 'سیدو (sido.ir) — پلتفرم کلینیک‌های دندان‌پزشکی', en: 'Sido (sido.ir) — dental-clinic platform' },
       current: true,
       points: {
         fa: [
@@ -230,7 +224,7 @@ window.CV = {
           'Shipped back-office features: activity history, shift schedules, a call-center lead panel, clinic image collections and a TV queue display for waiting rooms.'
         ]
       },
-      tags: ['React', 'TypeScript', 'REST API', 'RBAC', 'RTL']
+      tags: ['React', 'Next.js', 'TypeScript', 'REST API', 'RBAC', 'RTL']
     },
     {
       period: { fa: '۱۳۹۸ — اکنون', en: '2019 — Now' },
@@ -267,28 +261,6 @@ window.CV = {
         ]
       },
       tags: ['Python', 'Pandas', 'scikit-learn', 'Jupyter']
-    },
-    {
-      period: { fa: '۱۳۹۹ — اکنون', en: '2020 — Now' },
-      title: { fa: 'اپراتور و کارگردان پخش زنده', en: 'Live-Stream Operator & Director' },
-      org: { fa: 'رویدادها و برنامه‌های آنلاین', en: 'Events & online shows' },
-      current: true,
-      points: {
-        fa: ['راه‌اندازی و نصب تجهیزات پخش زنده روی پلتفرم‌های مختلف، کارگردانی و سوییچ تصاویر به‌صورت زنده.'],
-        en: ['Set up live-broadcast gear across multiple platforms; live directing and video switching.']
-      },
-      tags: ['Live Switching', 'Streaming', 'Directing']
-    },
-    {
-      period: { fa: '۱۳۹۹ — اکنون', en: '2020 — Now' },
-      title: { fa: 'عکاس و فیلم‌بردار', en: 'Photographer & Videographer' },
-      org: { fa: 'مدلینگ، صنعتی و تبلیغاتی', en: 'Modeling, industrial & commercial' },
-      current: true,
-      points: {
-        fa: ['عکاسی و فیلم‌برداری در زمینه‌های مدلینگ، صنعتی و تبلیغاتی.'],
-        en: ['Photography and videography for modeling, industrial and commercial clients.']
-      },
-      tags: ['Photography', 'Videography', 'Color']
     }
   ],
 
@@ -303,14 +275,15 @@ window.CV = {
 
   projects: [
     {
-      id: 'dental',
-      cat: ['saas', 'react'],
+      id: 'sido',
+      cat: ['react', 'web'],
       featured: true,
-      title: { fa: 'پنل SaaS کلینیک‌های دندان‌پزشکی', en: 'Dental-Clinic SaaS Back-Office' },
-      desc: { fa: 'پنل مدیریتی چندماژوله: ثبت‌نام دندان‌پزشکان، استخدام، نقش و دسترسی، اشتراک‌ها، شیفت‌ها، لیدها و نمایشگر نوبت.', en: 'A multi-module admin platform: dentist onboarding, recruitment, roles & permissions, subscriptions, shifts, leads and a queue display.' },
-      stack: ['React', 'TypeScript', 'REST', 'RBAC'],
-      mock: true,
-      nda: true
+      title: { fa: 'سیدو — پلتفرم کلینیک‌های دندان‌پزشکی', en: 'Sido — Dental-Clinic Platform' },
+      desc: { fa: 'پلتفرم چندماژوله با Next.js: ثبت‌نام دندان‌پزشکان، ماژول استخدام، نقش و دسترسی، اشتراک‌ها، شیفت‌ها، لیدها و نمایشگر نوبت کلینیک.', en: 'A multi-module Next.js platform: dentist onboarding, recruitment, roles & permissions, subscriptions, shifts, leads and a clinic queue display.' },
+      img: 'assets/img/sido.webp',
+      url: 'https://sido.ir/',
+      stack: ['Next.js', 'React', 'TypeScript', 'RBAC'],
+      mock: true
     },
     {
       id: 'testsho',
@@ -341,7 +314,7 @@ window.CV = {
     },
     {
       id: 'arses',
-      cat: ['web', 'saas'],
+      cat: ['web'],
       title: { fa: 'نرم‌افزار مدیریت پروژهٔ آرسس', en: 'Arses Project Management' },
       desc: { fa: 'وب‌سایت محصول نرم‌افزار سازمانی مدیریت پروژه.', en: 'Product website for an enterprise project-management suite.' },
       img: 'assets/img/arses.webp',
@@ -350,7 +323,7 @@ window.CV = {
     },
     {
       id: 'sahand',
-      cat: ['web', 'saas'],
+      cat: ['web'],
       title: { fa: 'نرم‌افزار CRM سهند', en: 'Sahand CRM' },
       desc: { fa: 'وب‌سایت نرم‌افزار مدیریت ارتباط با مشتری.', en: 'Product website for a customer-relationship-management platform.' },
       img: 'assets/img/sahand.webp',
@@ -405,9 +378,8 @@ window.CV = {
   ],
   filters: [
     { id: 'all' },
-    { id: 'saas', fa: 'SaaS', en: 'SaaS' },
     { id: 'web', fa: 'وب‌سایت', en: 'Websites' },
-    { id: 'react', fa: 'React', en: 'React' },
+    { id: 'react', fa: 'React / Next', en: 'React / Next' },
     { id: 'data', fa: 'داده', en: 'Data' },
     { id: 'oss', fa: 'اوپن‌سورس', en: 'Open source' }
   ]
