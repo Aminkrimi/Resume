@@ -5,11 +5,12 @@ export type TList = Record<Lang, string[]>;
 export type IconName =
   | 'sun' | 'moon' | 'command' | 'search' | 'arrow' | 'copy' | 'check' | 'download' | 'github' | 'telegram'
   | 'instagram' | 'mail' | 'phone' | 'pin' | 'code' | 'layout' | 'gauge' | 'chart' | 'camera' | 'cpu' | 'music'
-  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'globe' | 'up' | 'grad' | 'terminal' | 'close' | 'braces' | 'cursor';
+  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'globe' | 'up' | 'grad' | 'terminal' | 'close' | 'braces' | 'cursor' | 'branch' | 'commit' | 'play' | 'star' | 'book';
 
 export interface Social { id: IconName; label: string; url: string; handle: string }
 export interface Skill { name: string; level: 1 | 2 | 3 | 4 | 5 }
-export interface Job { period: T; title: T; org: T; current?: boolean; points: TList; tags: string[] }
+/** `lane` 0 is main; other lanes are branches that fork from main when the job started. */
+export interface Job { period: T; title: T; org: T; current?: boolean; branch: string; lane: number; since: number; points: TList; tags: string[] }
 export interface Project {
   id: string;
   featured?: boolean;
@@ -32,6 +33,7 @@ export interface CV {
   ui: Record<string, T | Record<string, T>> & {
     nav: Record<'about' | 'skills' | 'experience' | 'work' | 'contact', T>;
     palette: Record<string, T>;
+    playExamples: Record<'skills' | 'years' | 'tech' | 'hire', T>;
   };
   about: {
     paragraphs: T[];

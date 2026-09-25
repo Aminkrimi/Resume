@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
 import { prefersReduced } from '@/lib/client';
-import { SECTIONS } from './SectionHead';
+import { FILES, SECTIONS } from './SectionHead';
 
 const DECODE = '.sec-title, .contact-title, .services-title, .sub-title';
 const GLYPHS = { en: '<>/{}[]=+*#_01', fa: 'ابپتجچحخدرزسشصعفقکگلمنوهی' };
@@ -64,6 +64,14 @@ export function Effects({ lang }: { lang: Lang }) {
       }
     }, { rootMargin: '-45% 0px -50% 0px' });
     SECTIONS.forEach((id) => { const s = document.getElementById(id); if (s) navIO.observe(s); });
+
+    // Status bar: name of the "file" (section) in the middle of the screen.
+    const files: Record<string, string> = { hero: 'amin.tsx', playground: 'playground.ts', ...FILES };
+    const fileIO = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) $$<HTMLElement>('[data-sb-file]').forEach((el) => { el.textContent = files[e.target.id]; });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(files).forEach((id) => { const s = document.getElementById(id); if (s) fileIO.observe(s); });
+    cleanups.push(() => fileIO.disconnect());
     cleanups.push(() => navIO.disconnect());
 
     // 3D tilt: CSS variables only, so React never re-renders on pointer moves.
