@@ -24,7 +24,7 @@ export function PrintCV({ i }: { i: I18n }) {
       <h2>{i.L('تجربه', 'Experience')}</h2>
       {cv.experience.map((j) => (
         <div className="pcv-job" key={j.title.en}>
-          <div className="row">{i.t(j.title)} — {i.t(j.org)}<span>{i.t(j.period)}</span></div>
+          <div className="row">{i.t(j.title)}, {i.t(j.org)}<span>{i.t(j.period)}</span></div>
           <ul>{i.tl(j.points).map((x) => <li key={x}>{x}</li>)}</ul>
         </div>
       ))}
@@ -34,10 +34,10 @@ export function PrintCV({ i }: { i: I18n }) {
       </div>
       <h2>{i.L('نمونه‌کارها', 'Selected Projects')}</h2>
       <div className="pcv-proj">
-        {cv.projects.map((x) => <div key={x.id}><b>{i.t(x.title)}</b> — {i.t(x.desc)} <span>{short(x.url ?? x.code)}</span></div>)}
+        {cv.projects.map((x) => <div key={x.id}><b>{i.t(x.title)}:</b> {i.t(x.desc)} <span>{short(x.url ?? x.code)}</span></div>)}
       </div>
       <h2>{i.L('تحصیلات', 'Education')}</h2>
-      <div className="pcv-job"><div className="row">{i.t(e.period)} {i.t(e.title)} — {i.t(e.org)}</div></div>
+      <div className="pcv-job"><div className="row">{i.t(e.period)} {i.t(e.title)}, {i.t(e.org)}</div></div>
     </article>
   );
 }

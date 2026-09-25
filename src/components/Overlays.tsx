@@ -52,7 +52,7 @@ export function Overlays({ lang }: { lang: Lang }) {
   }, [palette, term, lang]);
 
   useEffect(() => {
-    console.log('%c</> %cMohammad Amin Karimi — try ⌘K, T, L, or ` for the terminal', 'color:#4d8dff;font-weight:bold', 'color:inherit');
+    console.log('%cAK %cMohammad Amin Karimi. Try ⌘K, T, L, or ` for the terminal.', 'color:#4a6fdc;font-weight:bold', 'color:inherit');
   }, []);
 
   return (

@@ -5,7 +5,6 @@ import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
 import { makeI18n } from '@/lib/i18n';
 import { switchLang, toggleTheme } from '@/lib/client';
-import { HASHES } from './Experience';
 import { FILES } from './SectionHead';
 
 type Line = { id: number; node: ReactNode; fa?: boolean };
@@ -13,6 +12,7 @@ type Line = { id: number; node: ReactNode; fa?: boolean };
 const C = ({ c, children }: { c: string; children: ReactNode }) => <span className={`t-${c}`}>{children}</span>;
 const Prompt = () => <><C c="p">amin@karimi</C><C c="m">:</C><C c="d">~</C><C c="m">$</C></>;
 const ext = { target: '_blank', rel: 'noopener' } as const;
+const HASHES = ['a3f9c21', '7be04d9', '4c2e81f', '19d7a3b', 'e5b6f02'];
 
 /** A small interactive shell: help, whoami, skills, projects, open <id>, contact, … */
 export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; onClose: () => void }) {
@@ -31,7 +31,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
   useEffect(() => {
     if (!open) return;
     if (nextId.current === 0) {
-      print(<><C c="d">amin-karimi</C> <C c="m">v{new Date().getFullYear() - cv.person.startYear}.0.0 · {new Date().toDateString()}</C></>);
+      print(<><C c="d">amin-karimi</C> <C c="m">v{new Date().getFullYear() - cv.person.startYear}.0.0, {new Date().toDateString()}</C></>);
       printFa(<>{i.L('خوش اومدی! برای دیدن فرمان‌ها ', 'Welcome! Type ')}<C c="a">help</C>{i.L(' رو تایپ کن.', ' to see what you can do.')}</>);
     }
     const t = setTimeout(() => input.current?.focus(), 20);
@@ -52,7 +52,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         ['clear', 'پاک کردن صفحه', 'clear screen'], ['exit', 'بستن ترمینال', 'close terminal'],
       ] as const).map(([c, fa, en]) => <span key={c}>{'  '}<C c="a">{c.padEnd(12)}</C>{i.L(fa, en)}{'\n'}</span>)}
     </>),
-    whoami: () => print(<><C c="w">{cv.person.name.en}</C> — {cv.person.role.en} <C c="m">@ {cv.person.location.en}</C></>),
+    whoami: () => print(<><C c="w">{cv.person.name.en}</C>, {cv.person.role.en} <C c="m">@ {cv.person.location.en}</C></>),
     about: () => cv.about.paragraphs.forEach((x) => printFa(i.t(x))),
     skills: () => cv.skills.forEach((g) => {
       print(<C c="y">▸ {g.group.en}</C>);
@@ -60,7 +60,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     }),
     experience: () => cv.experience.forEach((j, k) => {
       print(<><C c="y">commit {HASHES[k % HASHES.length]}</C>{k === 0 && <> <C c="a">(HEAD → main)</C></>}</>);
-      printFa(<><C c="w">{i.t(j.title)}</C> — {i.t(j.org)} <C c="m">[{i.t(j.period)}]</C></>);
+      printFa(<><C c="w">{i.t(j.title)}</C>, {i.t(j.org)} <C c="m">[{i.t(j.period)}]</C></>);
     }),
     projects: () => {
       cv.projects.forEach((p) => print(<>{'  '}<C c="a">{p.id.padEnd(13)}</C> {p.title.en} <C c="m">{p.stack.join(', ')}</C></>));
@@ -81,7 +81,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     exit: () => onClose(),
     date: () => print(new Date().toString()),
     ls: () => print(Object.values(FILES).map((f) => <span key={f}><C c={f.endsWith('/') ? 'd' : 'w'}>{f}</C>{'  '}</span>)),
-    sudo: () => print(<><C c="e">{i.L('دسترسی رد شد 😄 ولی می‌تونی منو استخدام کنی:', 'Permission denied 😄 — but you can hire me instead:')}</C> <a href={`mailto:${cv.person.email}`}>{cv.person.email}</a></>),
+    sudo: () => print(<><C c="e">{i.L('دسترسی رد شد. ولی می‌تونی منو استخدام کنی:', 'Permission denied. You can hire me instead:')}</C> <a href={`mailto:${cv.person.email}`}>{cv.person.email}</a></>),
     echo: (...a) => print(a.join(' ')),
   };
   const ALIASES: Record<string, string> = { exp: 'experience', work: 'projects', cat: 'about', '?': 'help', 'hire-me': 'sudo' };
@@ -96,7 +96,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     const cmd = ALIASES[cmd0.toLowerCase()] ?? cmd0.toLowerCase();
     const fn = COMMANDS[cmd];
     if (fn) fn(...args);
-    else print(<><C c="e">command not found:</C> {cmd0} — {i.L('برای راهنما help را تایپ کن', 'type')} <C c="a">help</C></>);
+    else print(<><C c="e">command not found:</C> {cmd0}. {i.L('برای راهنما help را تایپ کن', 'type')} <C c="a">help</C></>);
   };
 
   const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -121,8 +121,8 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
       <div className="term-backdrop" onClick={onClose} />
       <div className="term-win">
         <div className="term-bar">
-          <span className="lights"><i /><i /><i /></span><span className="title">amin@karimi: ~</span>
-          <button type="button" onClick={onClose} aria-label="Close">esc ✕</button>
+          <span className="title">amin@karimi: ~</span>
+          <button type="button" onClick={onClose} aria-label="Close">esc</button>
         </div>
         <div className="term-body" ref={body}>
           {lines.map((l) => <div key={l.id} className={`out${l.fa ? ' fa' : ''}`}>{l.node}</div>)}

@@ -5,23 +5,22 @@ export type TList = Record<Lang, string[]>;
 export type IconName =
   | 'sun' | 'moon' | 'command' | 'search' | 'arrow' | 'copy' | 'check' | 'download' | 'github' | 'telegram'
   | 'instagram' | 'mail' | 'phone' | 'pin' | 'code' | 'layout' | 'gauge' | 'chart' | 'camera' | 'cpu' | 'music'
-  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'film' | 'lock' | 'globe' | 'up' | 'grad' | 'terminal'
-  | 'file' | 'branch' | 'react';
+  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'globe' | 'up' | 'grad' | 'terminal' | 'close';
 
 export interface Social { id: IconName; label: string; url: string; handle: string }
 export interface Skill { name: string; level: 1 | 2 | 3 | 4 | 5 }
 export interface Job { period: T; title: T; org: T; current?: boolean; points: TList; tags: string[] }
 export interface Project {
   id: string;
-  cat: string[];
   featured?: boolean;
   title: T;
   desc: T;
+  /** Screenshot under /public. If the file is missing the card falls back to its text layout. */
   img?: string;
   url?: string;
   code?: string;
   stack: string[];
-  mock?: boolean;
+  highlights?: T[];
   glyph?: IconName;
 }
 
@@ -42,9 +41,7 @@ export interface CV {
   services: { icon: IconName; title: T; desc: T }[];
   skills: { group: T; items: Skill[] }[];
   also: string[];
-  marquee: string[];
   experience: Job[];
   education: { period: T; title: T; org: T; note: T }[];
   projects: Project[];
-  filters: ({ id: string } & Partial<T>)[];
 }
