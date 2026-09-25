@@ -4,7 +4,6 @@ import { ActionButton } from './ActionButton';
 import { ApiForm, type ApiLabels } from './ApiForm';
 import { Icon } from './Icon';
 import { SourceView } from './SourceView';
-import { contactSource } from '@/lib/source';
 
 export function Contact({ i }: { i: I18n }) {
   const p = cv.person;
@@ -35,7 +34,7 @@ export function Contact({ i }: { i: I18n }) {
           <h3 className="api-title reveal">{i.t(cv.ui.apiTitle)}</h3>
           <ApiForm l={Object.fromEntries(Object.entries(cv.ui.api).map(([k, t]) => [k, i.t(t)])) as ApiLabels} />
         </div>
-        <SourceView file="contact.sh" lines={contactSource(i)} i={i} />
+        <SourceView file="contact.sh" kind="contact" lang={i.lang} />
       </div>
     </section>
   );

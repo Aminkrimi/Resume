@@ -122,5 +122,8 @@ export function contactSource(i: I18n): CodeLines {
   ];
 }
 
+export const SOURCES = { about: aboutSource, skills: skillsSource, experience: experienceSource, work: workSource, contact: contactSource };
+export type SourceKind = keyof typeof SOURCES;
+
 /** Plain text of token lines, for the copy button. */
 export const plain = (lines: CodeLines) => lines.map((l) => l.map(([, t]) => t).join('')).join('\n');

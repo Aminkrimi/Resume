@@ -4,7 +4,6 @@ import type { I18n } from '@/lib/i18n';
 import { Icon } from './Icon';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
-import { workSource } from '@/lib/source';
 import { Shot } from './Shot';
 
 const hostOf = (url?: string) => (url ?? '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
@@ -79,7 +78,7 @@ export function Work({ i }: { i: I18n }) {
             ))}
           </ul>
         </div>
-        <SourceView file="projects.ts" lines={workSource(i)} i={i} />
+        <SourceView file="projects.ts" kind="work" lang={i.lang} />
       </div>
     </section>
   );
