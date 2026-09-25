@@ -1,6 +1,6 @@
 import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
-import { GithubGraph } from './GithubGraph';
+import { GithubLive } from './GithubLive';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
 import { skillsSource } from '@/lib/source';
@@ -37,7 +37,10 @@ export function Skills({ i }: { i: I18n }) {
               <h3>{i.t(cv.ui.alsoTitle)}</h3>
               <ul className="pills">{cv.also.map((a) => <li className="pill lv-3" key={a}>{a}</li>)}</ul>
             </article>
-            <GithubGraph title={i.t(cv.ui.githubTitle)} />
+            <GithubLive lang={i.lang} l={{
+              title: i.t(cv.ui.githubTitle), commits: i.t(cv.ui.ghCommits), languages: i.t(cv.ui.ghLanguages), repos: i.t(cv.ui.ghRepos),
+              stars: i.t(cv.ui.ghStars), error: i.t(cv.ui.ghError), empty: i.t(cv.ui.ghEmpty), profile: i.t(cv.ui.ghProfile),
+            }} />
           </div>
         </div>
         <SourceView file="skills.json" lines={skillsSource(i)} i={i} />

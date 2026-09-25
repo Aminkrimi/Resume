@@ -81,7 +81,7 @@ export function experienceSource(i: I18n): CodeLines {
     [['k', 'import type'], ['u', ' { '], ['f', 'Job'], ['u', ' } '], ['k', 'from'], ['s', " './types'"], ['u', ';']],
     [],
     ...tsConst('experience', 'Job[]', cv.experience.map((j) => ({
-      period: i.t(j.period), title: i.t(j.title), org: i.t(j.org), points: i.tl(j.points), stack: j.tags,
+      branch: j.branch, since: j.since, title: i.t(j.title), org: i.t(j.org), points: i.tl(j.points), stack: j.tags,
     }))),
     [],
     ...tsConst('education', 'Degree', { title: i.t(e.title), school: i.t(e.org), level: i.t(e.period), projects: ['Huffman coding', 'LCS'] }),

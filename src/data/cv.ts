@@ -48,7 +48,31 @@ export const cv = {
     projectsLabel: { fa: 'پروژهٔ تحویل‌شده', en: 'Projects shipped' },
     stackLabel: { fa: 'ابزار در جعبه‌ابزار', en: 'Tools in the kit' },
     aboutTitle: { fa: 'کدی که تمیز است، محصولی که دیده می‌شود', en: 'Clean code, products that get noticed' },
-    githubTitle: { fa: 'فعالیت گیت‌هاب', en: 'GitHub activity' },
+    githubTitle: { fa: 'گیت‌هاب، زنده', en: 'GitHub, live' },
+    playTitle: { fa: 'روی من کد اجرا کن', en: 'Run some code on me' },
+    playLead: {
+      fa: 'دیتای همین صفحه به‌صورت شیء amin در دسترس است. کد را عوض کن و اجرا کن؛ داخل یک Web Worker ایزوله اجرا می‌شود.',
+      en: 'The data behind this page is loaded as amin. Change the code and run it; it executes in an isolated Web Worker.'
+    },
+    run: { fa: 'اجرا', en: 'Run' },
+    console: { fa: 'کنسول', en: 'Console' },
+    playIdle: { fa: 'Run یا ⌘/Ctrl + Enter را بزن.', en: 'Press Run or ⌘/Ctrl + Enter.' },
+    playTimeout: { fa: 'بعد از ۱٫۵ ثانیه متوقف شد (حلقهٔ بی‌نهایت؟)', en: 'Stopped after 1.5s (an infinite loop?)' },
+    playExamples: {
+      skills: { fa: 'مهارت‌های مسلط', en: 'Expert skills' },
+      years: { fa: 'سال‌های کدنویسی', en: 'Years coding' },
+      tech: { fa: 'پرکاربردترین تکنولوژی', en: 'Most used tech' },
+      hire: { fa: 'استخدام', en: 'Hire' }
+    },
+    sbOpen: { fa: 'آمادهٔ همکاری', en: 'Open to work' },
+    sbBusy: { fa: 'مشغول', en: 'Busy' },
+    ghCommits: { fa: 'آخرین کامیت‌ها', en: 'Latest commits' },
+    ghLanguages: { fa: 'زبان‌ها در ریپوها', en: 'Languages across repos' },
+    ghRepos: { fa: 'ریپوی عمومی', en: 'Public repos' },
+    ghStars: { fa: 'ستاره', en: 'Stars' },
+    ghError: { fa: 'الان به API گیت‌هاب دسترسی نیست (احتمالاً محدودیت درخواست).', en: 'The GitHub API is not reachable right now (probably rate-limited).' },
+    ghEmpty: { fa: 'کامیت عمومی تازه‌ای نیست.', en: 'No recent public commits.' },
+    ghProfile: { fa: 'دیدن پروفایل', en: 'Open the profile' },
     personalityTitle: { fa: 'شخصیت کاری', en: 'How I work' },
     interestsTitle: { fa: 'خارج از کد', en: 'Off the clock' },
     servicesTitle: { fa: 'کارهایی که انجام می‌دهم', en: 'What I do' },
@@ -210,6 +234,9 @@ export const cv = {
   experience: [
     {
       period: { fa: '۱۴۰۴ تا اکنون', en: '2025 - Now' },
+      branch: 'feat/sido',
+      lane: 2,
+      since: 2025,
       title: { fa: 'توسعه‌دهندهٔ فرانت‌اند', en: 'Front-End Developer' },
       org: { fa: 'سیدو (sido.ir)، پلتفرم کلینیک‌های دندان‌پزشکی', en: 'Sido (sido.ir), dental-clinic platform' },
       current: true,
@@ -231,6 +258,9 @@ export const cv = {
     },
     {
       period: { fa: '۱۳۹۸ تا اکنون', en: '2019 - Now' },
+      branch: 'main',
+      lane: 0,
+      since: 2019,
       title: { fa: 'طراح و توسعه‌دهندهٔ وب', en: 'Web Designer & Developer' },
       org: { fa: 'فریلنس و همکاری با شرکت‌های معتبر', en: 'Freelance & agency collaborations' },
       current: true,
@@ -250,6 +280,9 @@ export const cv = {
     },
     {
       period: { fa: '۱۴۰۲ تا اکنون', en: '2023 - Now' },
+      branch: 'ml/research',
+      lane: 1,
+      since: 2023,
       title: { fa: 'داده‌کاوی و یادگیری ماشین', en: 'Data Mining & ML' },
       org: { fa: 'پروژه‌های شخصی و آموزشی', en: 'Personal & academic projects' },
       current: true,

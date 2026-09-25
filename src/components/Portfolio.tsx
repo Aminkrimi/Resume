@@ -8,8 +8,10 @@ import { Experience } from './Experience';
 import { Footer } from './Footer';
 import { Hero } from './Hero';
 import { Overlays } from './Overlays';
+import { PlaygroundSection } from './PlaygroundSection';
 import { PrintCV } from './PrintCV';
 import { Skills } from './Skills';
+import { StatusBar } from './StatusBar';
 import { Topbar } from './Topbar';
 import { Work } from './Work';
 
@@ -26,9 +28,11 @@ export function Portfolio({ lang }: { lang: Lang }) {
         <Skills i={i} />
         <Experience i={i} />
         <Work i={i} />
+        <PlaygroundSection i={i} />
         <Contact i={i} />
       </main>
       <Footer i={i} />
+      <StatusBar i={i} />
       <PrintCV i={i} />
       <Overlays lang={lang} />
       <Effects lang={lang} />

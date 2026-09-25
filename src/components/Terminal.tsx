@@ -7,6 +7,7 @@ import { makeI18n } from '@/lib/i18n';
 import { emit, switchLang, toggleTheme } from '@/lib/client';
 import { aboutSource, contactSource, experienceSource, skillsSource, workSource } from '@/lib/source';
 import { fmtVitals, getVitals, goodVitals } from '@/lib/vitals';
+import { loadGithub, timeAgo } from '@/lib/github';
 import type { CodeLines } from './editorArt';
 import { FILES } from './SectionHead';
 
@@ -56,6 +57,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         ['open <id>', 'باز کردن پروژه', 'open a project'], ['contact', 'راه‌های ارتباط', 'how to reach me'],
         ['theme', 'تغییر تم', 'toggle theme'], ['lang', 'تغییر زبان', 'switch language'], ['cv', 'دانلود رزومه', 'print / save CV'],
         ['cat <file>', 'نمایش سورس یک بخش', 'print a section\'s source'], ['ls', 'فهرست فایل‌ها', 'list files'],
+        ['git log', 'کامیت‌های واقعی گیت‌هاب', 'real GitHub commits'], ['git branch', 'برنچ‌های کاری', 'career branches'],
         ['neofetch', 'مشخصات سیستم', 'system info'], ['perf', 'کارایی همین بازدید', 'live web vitals'],
         ['source', 'نمای سورس صفحه', 'toggle source view'], ['inspect', 'حالت Inspect', 'inspect elements'],
         ['clear', 'پاک کردن صفحه', 'clear screen'], ['exit', 'بستن ترمینال', 'close terminal'],
@@ -93,6 +95,21 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
       const src = SOURCES[file];
       if (!src) return print(<><C c="e">cat: {file}:</C> {i.L('چنین فایلی نیست. ls را امتحان کن', 'no such file. Try ls')}</>);
       src(i).forEach((l) => print(<span className="t-src">{l.length ? l.map(([k, t], j) => <span className={`sx-${k}`} key={j}>{t}</span>) : ' '}</span>));
+    },
+    git: (sub = '') => {
+      if (sub === 'status') {
+        print(<>On branch <C c="p">main</C>{'\n'}Your branch is up to date with <C c="p">&apos;origin/main&apos;</C>.{'\n'}nothing to commit, working tree clean</>);
+      } else if (sub === 'branch') {
+        [...cv.experience].sort((a, b) => a.lane - b.lane).forEach((j) => print(<>{j.lane === 0 ? <C c="p">* </C> : '  '}<C c={j.lane === 0 ? 'p' : 'd'}>{j.branch.padEnd(14)}</C><C c="m">since {j.since}</C>  {j.title.en}</>));
+      } else if (sub === 'log') {
+        print(<C c="m">{i.L('در حال خواندن از GitHub API...', 'fetching from the GitHub API...')}</C>);
+        loadGithub().then((d) => {
+          if (!d.commits.length) return print(<C c="m">{i.L('کامیت عمومی تازه‌ای نیست.', 'No recent public commits.')}</C>);
+          d.commits.forEach((c) => print(<><C c="y">{c.sha}</C> <a href={c.url} {...ext}>{c.message}</a> <C c="m">({c.repo}, {timeAgo(c.date, 'en')})</C></>));
+        }, () => print(<C c="e">{i.L('دسترسی به GitHub API ممکن نشد (محدودیت درخواست؟)', 'Could not reach the GitHub API (rate limit?)')}</C>));
+      } else {
+        print(<>usage: git <C c="a">log</C> | <C c="a">branch</C> | <C c="a">status</C></>);
+      }
     },
     neofetch: () => {
       const years = new Date().getFullYear() - cv.person.startYear;
