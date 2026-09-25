@@ -11,6 +11,9 @@ export function Controls({ lang }: { lang: Lang }) {
       <button className="ctrl ctrl-wide" type="button" aria-label={fa ? 'پالت فرمان' : 'Command palette'} title="⌘K" onClick={() => emit('palette')}>
         <Icon name="command" /><span className="ctrl-k">K</span>
       </button>
+      <button className="ctrl" id="btn-src" type="button" aria-pressed="false" aria-label={fa ? 'نمای سورس' : 'Source view'} title="S" onClick={() => emit('source')}>
+        <Icon name="braces" />
+      </button>
       <button className="ctrl" type="button" aria-label={fa ? 'ترمینال' : 'Terminal'} title="`" onClick={() => emit('terminal')}>
         <Icon name="terminal" />
       </button>

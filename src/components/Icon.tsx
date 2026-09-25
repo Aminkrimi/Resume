@@ -1,5 +1,5 @@
 import {
-  ArrowUp, ArrowUpRight, Brain, Camera, ChartLineUp, Check, Code, Command, Copy, Cpu, DownloadSimple, EnvelopeSimple,
+  ArrowUp, ArrowUpRight, Brain, BracketsCurly, CursorClick, Camera, ChartLineUp, Check, Code, Command, Copy, Cpu, DownloadSimple, EnvelopeSimple,
   Gauge, GithubLogo, Globe, GraduationCap, InstagramLogo, Layout, Lightning, MagnifyingGlass, MapPin, Moon, MusicNotes,
   Palette, Phone, Sun, TelegramLogo, TerminalWindow, TreeStructure, UsersThree, X,
 } from '@phosphor-icons/react/dist/ssr';
@@ -12,6 +12,7 @@ const ICONS: Record<IconName, PhosphorIcon> = {
   phone: Phone, pin: MapPin, code: Code, layout: Layout, gauge: Gauge, chart: ChartLineUp, camera: Camera, cpu: Cpu,
   music: MusicNotes, palette: Palette, bolt: Lightning, users: UsersThree, brain: Brain, tree: TreeStructure,
   globe: Globe, up: ArrowUp, grad: GraduationCap, terminal: TerminalWindow, close: X,
+  braces: BracketsCurly, cursor: CursorClick,
 };
 
 /** Phosphor icons, one family and one weight across the site. */

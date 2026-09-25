@@ -2,6 +2,8 @@ import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
 import { GithubGraph } from './GithubGraph';
 import { SectionHead } from './SectionHead';
+import { SourceView } from './SourceView';
+import { skillsSource } from '@/lib/source';
 
 export const LEVELS = {
   5: { fa: 'مسلط', en: 'Expert' },
@@ -16,26 +18,29 @@ export function Skills({ i }: { i: I18n }) {
   return (
     <section className="section" id="skills">
       <div className="wrap">
-        <SectionHead title={i.t(cv.ui.skillsTitle)} lead={i.t(cv.ui.skillsLead)} />
-        <div className="bento">
-          {cv.skills.map((g, gi) => (
-            <article className={`cell cell-${gi} reveal`} style={{ '--d': gi % 2 } as React.CSSProperties} key={g.group.en}>
-              <h3>{i.t(g.group)}</h3>
-              <ul className="pills">
-                {g.items.map((s) => (
-                  <li key={s.name} className={`pill lv-${s.level}`} title={i.t(LEVELS[s.level])}>
-                    {s.name}<span className="sr-only"> ({i.t(LEVELS[s.level])})</span>
-                  </li>
-                ))}
-              </ul>
+        <div className="ui-view">
+          <SectionHead title={i.t(cv.ui.skillsTitle)} lead={i.t(cv.ui.skillsLead)} />
+          <div className="bento">
+            {cv.skills.map((g, gi) => (
+              <article className={`cell cell-${gi} reveal`} style={{ '--d': gi % 2 } as React.CSSProperties} key={g.group.en}>
+                <h3>{i.t(g.group)}</h3>
+                <ul className="pills">
+                  {g.items.map((s) => (
+                    <li key={s.name} className={`pill lv-${s.level}`} title={i.t(LEVELS[s.level])}>
+                      {s.name}<span className="sr-only"> ({i.t(LEVELS[s.level])})</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+            <article className="cell cell-also reveal">
+              <h3>{i.t(cv.ui.alsoTitle)}</h3>
+              <ul className="pills">{cv.also.map((a) => <li className="pill lv-3" key={a}>{a}</li>)}</ul>
             </article>
-          ))}
-          <article className="cell cell-also reveal">
-            <h3>{i.t(cv.ui.alsoTitle)}</h3>
-            <ul className="pills">{cv.also.map((a) => <li className="pill lv-3" key={a}>{a}</li>)}</ul>
-          </article>
-          <GithubGraph title={i.t(cv.ui.githubTitle)} />
+            <GithubGraph title={i.t(cv.ui.githubTitle)} />
+          </div>
         </div>
+        <SourceView file="skills.json" lines={skillsSource(i)} i={i} />
       </div>
     </section>
   );

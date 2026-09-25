@@ -9,7 +9,11 @@ A bilingual (فارسی / English) developer portfolio built with **Next.js 16 (
 - **3D editor hero (Three.js):** loaded lazily. The editor panels are painted on 2D canvases (`src/components/editorArt.ts`) and used as textures. A flat, tilted render of the editor shows first. It also stays as the fallback when WebGL is missing or software-only (SwiftShader, llvmpipe), so machines without a GPU are not slowed down. On a slow GPU the scene drops to 1x resolution, then to a still frame. Rendering pauses off-screen and is static under `prefers-reduced-motion`. The scene's page-coloured parts read the CSS theme tokens.
 - **Bilingual, RTL/LTR, pre-rendered:** Persian lives at `/` and English at `/en/`. The 3D scene mirrors itself for RTL. Switch languages with the header button or the `L` key.
 - **Dark / light themes:** follows the system setting and remembers your choice. Shortcut: `T`.
-- **Interactive terminal** (`` ` ``) and **command palette** (`⌘K` / `Ctrl+K` / `/`).
+- **Source view** (`S`, the `{ }` button, or the palette): every section flips in 3D to the file it is built from (`about.md`, `skills.json`, `experience.ts`, `projects.ts`, `contact.sh`). The code is generated from the real data in `cv.ts` (`src/lib/source.ts`), syntax-highlighted, with a copy button.
+- **Inspect mode** (`I`): a DevTools-style overlay. Hover any element to see its selector and size; click to copy the selector. `Esc` exits.
+- **Live Web Vitals** in the footer: LCP, CLS, INP and page weight of the current visit, measured in the visitor's browser with `PerformanceObserver` (`src/lib/vitals.ts`).
+- **Decoding headings:** section titles resolve from random glyphs (Persian letters on the Persian page) as they scroll in. Their height is fixed while scrambling, so there is no layout shift.
+- **Interactive terminal** (`` ` ``) with `neofetch`, `perf`, `cat <file>` (prints a section's source), `ls`, `source`, `inspect` and more, plus the **command palette** (`⌘K` / `Ctrl+K` / `/`).
 - **Printable CV:** the "Download CV" button prints a clean A4 resume in the current language.
 - **Motion:** sections rise out of a slight 3D tilt as they enter the viewport. Screenshots tilt toward the pointer. The timeline line fills with a CSS scroll-driven animation. There are no scroll listeners, and everything honours `prefers-reduced-motion`.
 
@@ -38,9 +42,10 @@ src/
 │  ├─ editorArt.ts                   canvas painting for the editor, explorer, popup, terminal
 │  ├─ Work.tsx, Shot.tsx             featured project, screenshot gallery with 3D tilt, open source
 │  ├─ Terminal.tsx, Palette.tsx, Overlays.tsx   interactive shell, ⌘K, shortcuts (client)
-│  └─ Effects.tsx                    reveals, active nav, pointer tilt, clock (client)
+│  ├─ SourceView.tsx, Inspector.tsx, PerfStats.tsx   source view, inspect mode, live vitals
+│  └─ Effects.tsx                    reveals, heading decode, active nav, pointer tilt, clock (client)
 ├─ data/cv.ts, types.ts              all content (FA + EN), typed
-└─ lib/                              i18n helpers, client utilities, metadata
+└─ lib/                              i18n, client utilities, metadata, source.ts (data → code), vitals.ts
 public/img/                          optimized WebP images, favicon
 .github/workflows/deploy.yml         lint → typecheck → build → deploy to Pages
 ```

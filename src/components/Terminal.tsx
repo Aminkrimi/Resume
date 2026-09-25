@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
 import { makeI18n } from '@/lib/i18n';
-import { switchLang, toggleTheme } from '@/lib/client';
+import { emit, switchLang, toggleTheme } from '@/lib/client';
+import { aboutSource, contactSource, experienceSource, skillsSource, workSource } from '@/lib/source';
+import { fmtVitals, getVitals, goodVitals } from '@/lib/vitals';
+import type { CodeLines } from './editorArt';
 import { FILES } from './SectionHead';
 
 type Line = { id: number; node: ReactNode; fa?: boolean };
@@ -13,6 +16,9 @@ const C = ({ c, children }: { c: string; children: ReactNode }) => <span classNa
 const Prompt = () => <><C c="p">amin@karimi</C><C c="m">:</C><C c="d">~</C><C c="m">$</C></>;
 const ext = { target: '_blank', rel: 'noopener' } as const;
 const HASHES = ['a3f9c21', '7be04d9', '4c2e81f', '19d7a3b', 'e5b6f02'];
+const SOURCES: Record<string, (i: ReturnType<typeof makeI18n>) => CodeLines> = {
+  [FILES.about]: aboutSource, [FILES.skills]: skillsSource, [FILES.experience]: experienceSource, [FILES.work]: workSource, [FILES.contact]: contactSource,
+};
 
 /** A small interactive shell: help, whoami, skills, projects, open <id>, contact, … */
 export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; onClose: () => void }) {
@@ -49,6 +55,9 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         ['experience', 'سوابق کاری', 'work history (git log)'], ['projects', 'نمونه‌کارها', 'list projects'],
         ['open <id>', 'باز کردن پروژه', 'open a project'], ['contact', 'راه‌های ارتباط', 'how to reach me'],
         ['theme', 'تغییر تم', 'toggle theme'], ['lang', 'تغییر زبان', 'switch language'], ['cv', 'دانلود رزومه', 'print / save CV'],
+        ['cat <file>', 'نمایش سورس یک بخش', 'print a section\'s source'], ['ls', 'فهرست فایل‌ها', 'list files'],
+        ['neofetch', 'مشخصات سیستم', 'system info'], ['perf', 'کارایی همین بازدید', 'live web vitals'],
+        ['source', 'نمای سورس صفحه', 'toggle source view'], ['inspect', 'حالت Inspect', 'inspect elements'],
         ['clear', 'پاک کردن صفحه', 'clear screen'], ['exit', 'بستن ترمینال', 'close terminal'],
       ] as const).map(([c, fa, en]) => <span key={c}>{'  '}<C c="a">{c.padEnd(12)}</C>{i.L(fa, en)}{'\n'}</span>)}
     </>),
@@ -80,11 +89,38 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     clear: () => setLines([]),
     exit: () => onClose(),
     date: () => print(new Date().toString()),
+    cat: (file = 'about.md') => {
+      const src = SOURCES[file];
+      if (!src) return print(<><C c="e">cat: {file}:</C> {i.L('چنین فایلی نیست. ls را امتحان کن', 'no such file. Try ls')}</>);
+      src(i).forEach((l) => print(<span className="t-src">{l.length ? l.map(([k, t], j) => <span className={`sx-${k}`} key={j}>{t}</span>) : ' '}</span>));
+    },
+    neofetch: () => {
+      const years = new Date().getFullYear() - cv.person.startYear;
+      const art = ['     /\\     ', '    /  \\    ', '   / /\\ \\   ', '  / ____ \\  ', ' /_/    \\_\\ ', '             '];
+      const info: [string, string][] = [
+        ['OS', 'Next.js 16, static export'], ['Host', 'GitHub Pages'], ['Kernel', 'React 19'],
+        ['Uptime', `${years} years (since ${cv.person.startYear})`], ['Shell', 'amin-sh'],
+        ['Languages', 'TypeScript, JavaScript, Python, C#'], ['Stack', 'React, Next.js, Three.js'],
+        ['Theme', document.documentElement.dataset.theme ?? 'dark'], ['Locale', lang === 'fa' ? 'fa-IR (RTL)' : 'en (LTR)'],
+        ['Location', cv.person.location.en], ['Status', cv.person.availability.en],
+      ];
+      const rows: React.ReactNode[] = [<Fragment key="user"><C c="p">amin</C><C c="m">@</C><C c="p">karimi</C></Fragment>, <C key="rule" c="m">------------</C>, ...info.map(([k, v]) => <Fragment key={k}><C c="d">{k}</C><C c="m">: </C>{v}</Fragment>)];
+      rows.forEach((r, k) => print(<><C c="d">{(art[k] ?? '').padEnd(15)}</C>{r}</>));
+      print(<>{' '.repeat(15)}{['#708fea', '#a9bcf3', '#4fbf8b', '#e2c07a', '#f08a8a', '#d9dce3'].map((c) => <span key={c} style={{ color: c }}>███</span>)}</>);
+    },
+    perf: () => {
+      const v = getVitals(), f = fmtVitals(v), g = goodVitals(v);
+      print(<C c="y">{i.L('کارایی همین بازدید، اندازه‌گیری زنده', 'This visit, measured live')}</C>);
+      ([['LCP', f.lcp, g.lcp], ['CLS', f.cls, g.cls], ['INP', f.inp, g.inp], ['Weight', f.kb, true]] as const)
+        .forEach(([k, val, ok]) => print(<>{'  '}{k.padEnd(8)}<C c={ok ? 'p' : 'w'}>{val}</C></>));
+    },
+    source: () => { onClose(); setTimeout(() => emit('source'), 80); },
+    inspect: () => { onClose(); setTimeout(() => emit('inspect'), 80); },
     ls: () => print(Object.values(FILES).map((f) => <span key={f}><C c={f.endsWith('/') ? 'd' : 'w'}>{f}</C>{'  '}</span>)),
     sudo: () => print(<><C c="e">{i.L('دسترسی رد شد. ولی می‌تونی منو استخدام کنی:', 'Permission denied. You can hire me instead:')}</C> <a href={`mailto:${cv.person.email}`}>{cv.person.email}</a></>),
     echo: (...a) => print(a.join(' ')),
   };
-  const ALIASES: Record<string, string> = { exp: 'experience', work: 'projects', cat: 'about', '?': 'help', 'hire-me': 'sudo' };
+  const ALIASES: Record<string, string> = { exp: 'experience', work: 'projects', '?': 'help', 'hire-me': 'sudo', vitals: 'perf' };
 
   const run = (raw: string) => {
     const line = raw.trim();
@@ -108,6 +144,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
       e.preventDefault();
       const [c, a] = value.toLowerCase().split(/\s+/);
       if (c === 'open' && a !== undefined) { const m = cv.projects.find((p) => p.id.startsWith(a)); if (m) setValue(`open ${m.id}`); }
+      else if (c === 'cat' && a !== undefined) { const m = Object.keys(SOURCES).find((f) => f.startsWith(a)); if (m) setValue(`cat ${m}`); }
       else { const m = Object.keys(COMMANDS).find((k) => k.startsWith(c)); if (m) setValue(m); }
     }
     else if (e.key === 'Escape') onClose();

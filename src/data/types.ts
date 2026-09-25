@@ -5,7 +5,7 @@ export type TList = Record<Lang, string[]>;
 export type IconName =
   | 'sun' | 'moon' | 'command' | 'search' | 'arrow' | 'copy' | 'check' | 'download' | 'github' | 'telegram'
   | 'instagram' | 'mail' | 'phone' | 'pin' | 'code' | 'layout' | 'gauge' | 'chart' | 'camera' | 'cpu' | 'music'
-  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'globe' | 'up' | 'grad' | 'terminal' | 'close';
+  | 'palette' | 'bolt' | 'users' | 'brain' | 'tree' | 'globe' | 'up' | 'grad' | 'terminal' | 'close' | 'braces' | 'cursor';
 
 export interface Social { id: IconName; label: string; url: string; handle: string }
 export interface Skill { name: string; level: 1 | 2 | 3 | 4 | 5 }

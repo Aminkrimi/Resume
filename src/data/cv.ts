@@ -88,9 +88,21 @@ export const cv = {
       github: { fa: 'باز کردن گیت‌هاب', en: 'Open GitHub' },
       telegram: { fa: 'پیام در تلگرام', en: 'Message on Telegram' },
       terminal: { fa: 'باز کردن ترمینال', en: 'Open terminal' },
+      source: { fa: 'نمای سورس (کد پشت هر بخش)', en: 'Source view (the code behind each section)' },
+      inspect: { fa: 'حالت Inspect (مثل DevTools)', en: 'Inspect elements (like DevTools)' },
       top: { fa: 'برگشت به بالا', en: 'Back to top' }
     },
-    shortcuts: { fa: '⌘K فرمان‌ها، ` ترمینال، T تم، L زبان', en: '⌘K commands, ` terminal, T theme, L language' },
+    shortcuts: { fa: '⌘K فرمان‌ها، ` ترمینال، S سورس، I اینسپکت، T تم، L زبان', en: '⌘K commands, ` terminal, S source, I inspect, T theme, L language' },
+    sourceView: { fa: 'نمای سورس', en: 'Source view' },
+    sourceOn: { fa: 'نمای سورس روشن شد؛ هر بخش حالا کد خودش است. S برای برگشت.', en: 'Source view on. Each section now shows its code. Press S to switch back.' },
+    sourceOff: { fa: 'برگشت به نمای عادی', en: 'Back to the regular view' },
+    copyCode: { fa: 'کپی', en: 'Copy' },
+    codeCopied: { fa: 'کد کپی شد', en: 'Code copied' },
+    inspectOn: { fa: 'حالت Inspect روشن شد. روی هر المان برو؛ کلیک سلکتورش را کپی می‌کند. Esc برای خروج.', en: 'Inspect mode on. Hover any element; click copies its selector. Esc to exit.' },
+    inspectOff: { fa: 'حالت Inspect خاموش شد', en: 'Inspect mode off' },
+    selectorCopied: { fa: 'سلکتور کپی شد', en: 'Selector copied' },
+    needsMouse: { fa: 'حالت Inspect به ماوس نیاز دارد', en: 'Inspect mode needs a mouse' },
+    perfTitle: { fa: 'همین بازدید، اندازه‌گیری زنده', en: 'This visit, measured live' },
     skip: { fa: 'پرش به محتوا', en: 'Skip to content' }
   },
 

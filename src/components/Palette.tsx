@@ -26,6 +26,8 @@ export function Palette({ lang, onClose }: { lang: Lang; onClose: () => void }) 
       run: () => document.getElementById(id)?.scrollIntoView({ behavior: smooth() }),
     })),
     { label: i.t(P.terminal), kw: `${both(P.terminal)} terminal shell`, icon: 'terminal', key: '`', run: () => emit('terminal') },
+    { label: i.t(P.source), kw: `${both(P.source)} source code json view`, icon: 'braces', key: 'S', run: () => emit('source') },
+    { label: i.t(P.inspect), kw: `${both(P.inspect)} inspect devtools element`, icon: 'cursor', key: 'I', run: () => emit('inspect') },
     { label: i.t(P.theme), kw: both(P.theme), icon: 'sun', key: 'T', run: () => toggleTheme() },
     { label: i.t(P.lang), kw: both(P.lang), icon: 'globe', key: 'L', run: () => switchLang(lang) },
     { label: i.t(P.email), kw: both(P.email), icon: 'copy', run: () => emit('copy-email') },
