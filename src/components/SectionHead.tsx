@@ -1,5 +1,5 @@
 /** Section ids double as anchor links, nav targets and terminal "files". Keep them stable. */
-export const FILES = { about: 'about.md', skills: 'skills.json', experience: 'experience.log', work: 'projects/', contact: 'contact.sh' } as const;
+export const FILES = { about: 'about.md', skills: 'skills.json', experience: 'experience.ts', work: 'projects.ts', contact: 'contact.sh' } as const;
 export type SectionId = keyof typeof FILES;
 export const SECTIONS = Object.keys(FILES) as SectionId[];
 

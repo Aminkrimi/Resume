@@ -6,19 +6,47 @@ import type { Lang } from '@/data/types';
 import { prefersReduced } from '@/lib/client';
 import { SECTIONS } from './SectionHead';
 
+const DECODE = '.sec-title, .contact-title, .services-title, .sub-title';
+const GLYPHS = { en: '<>/{}[]=+*#_01', fa: 'ابپتجچحخدرزسشصعفقکگلمنوهی' };
+
 /**
  * Page-wide DOM effects that don't need React state: scroll reveals and the active nav link
- * (IntersectionObserver, no scroll listeners), 3D pointer tilt on screenshots and the live clock.
+ * (IntersectionObserver, no scroll listeners), a decode effect on headings, 3D pointer tilt on
+ * screenshots and the live clock.
  */
 export function Effects({ lang }: { lang: Lang }) {
   useEffect(() => {
     const $$ = <E extends Element>(s: string) => [...document.querySelectorAll<E>(s)];
     const cleanups: (() => void)[] = [];
+    const reduced = prefersReduced();
+
+    // Headings "decode" from random glyphs as they arrive. Height is fixed while scrambling so a
+    // wider scrambled line can never push the content below (no layout shift).
+    const decode = (el: HTMLElement) => {
+      const text = el.dataset.text ?? el.textContent ?? '';
+      if (!text || reduced) return;
+      el.dataset.text = text;
+      el.setAttribute('aria-label', text);
+      el.style.height = `${el.offsetHeight}px`;
+      const pool = GLYPHS[lang], start = performance.now(), dur = 850;
+      const step = (now: number) => {
+        const k = Math.min(1, (now - start) / dur);
+        const fixed = Math.floor(text.length * k * k);
+        let s = text.slice(0, fixed);
+        for (let j = fixed; j < text.length; j++) s += text[j] === ' ' ? ' ' : pool[(Math.random() * pool.length) | 0];
+        el.textContent = s;
+        if (k < 1) requestAnimationFrame(step);
+        else { el.textContent = text; el.style.height = ''; }
+      };
+      requestAnimationFrame(step);
+    };
 
     const revealIO = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         e.target.classList.add('in');
+        const title = e.target.matches(DECODE) ? e.target : e.target.querySelector(DECODE);
+        if (title instanceof HTMLElement) decode(title);
         revealIO.unobserve(e.target);
       }
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
@@ -39,7 +67,7 @@ export function Effects({ lang }: { lang: Lang }) {
     cleanups.push(() => navIO.disconnect());
 
     // 3D tilt: CSS variables only, so React never re-renders on pointer moves.
-    if (matchMedia('(hover: hover) and (pointer: fine)').matches && !prefersReduced()) {
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
       const move = (e: PointerEvent) => {
         const el = (e.target as Element).closest<HTMLElement>('[data-tilt]');
         if (!el) return;

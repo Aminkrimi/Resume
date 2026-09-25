@@ -4,7 +4,7 @@ import type { Lang } from '@/data/types';
 import { asset, langHref } from './i18n';
 
 /** Tiny event bus so server-rendered buttons can talk to client overlays. */
-export type CvEvent = 'terminal' | 'palette' | 'print' | 'copy-email' | 'toast';
+export type CvEvent = 'terminal' | 'palette' | 'print' | 'copy-email' | 'toast' | 'inspect' | 'source';
 export const emit = (name: CvEvent, detail?: string) => window.dispatchEvent(new CustomEvent(`cv:${name}`, { detail }));
 export const on = (name: CvEvent, fn: (detail?: string) => void) => {
   const h = (e: Event) => fn((e as CustomEvent<string>).detail);
@@ -35,6 +35,22 @@ export function toggleTheme(origin?: Element | null) {
       { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' },
     );
   });
+}
+
+/**
+ * Source view: every section swaps to the code behind it. Keeps whatever section is on screen
+ * at the same spot, since the two views have different heights. Returns the new state.
+ */
+export function toggleSource(): boolean {
+  const doc = document.documentElement;
+  const on = doc.dataset.view !== 'code';
+  const probe = document.elementFromPoint(innerWidth / 2, innerHeight / 3)?.closest('section');
+  const before = probe?.getBoundingClientRect().top ?? 0;
+  doc.classList.add('view-anim');
+  if (on) doc.dataset.view = 'code'; else delete doc.dataset.view;
+  document.getElementById('btn-src')?.setAttribute('aria-pressed', String(on));
+  if (probe) scrollBy({ top: probe.getBoundingClientRect().top - before, behavior: 'instant' });
+  return on;
 }
 
 /** Languages are separate static pages: / (fa) and /en/ (en). Keep the current section. */
