@@ -2,11 +2,11 @@
 
 A bilingual (فارسی / English) developer portfolio built with **Next.js 16 (App Router) + React 19 + TypeScript + Three.js**. It is statically exported (`output: 'export'`) and deployed to GitHub Pages by GitHub Actions.
 
-**Design:** redesigned with the project's `taste-skill` / `redesign-skill` (see [`.claude/skills`](.claude/skills)). The base is a neutral zinc palette with a single electric-blue accent. Type is Geist / Geist Mono, with Vazirmatn for Persian, all self-hosted through `next/font`. Icons come from Phosphor. The hero is a real-time 3D scene: an "exploded view" of interface layers with the profile photo on the front card. The layers drift apart on load, follow the pointer, and spread further as you scroll past.
+**Design:** redesigned with the project's `taste-skill` / `redesign-skill` (see [`.claude/skills`](.claude/skills)). The base is a neutral zinc palette with a single electric-blue accent. Type is Geist / Geist Mono, with Vazirmatn for Persian, all self-hosted through `next/font`. Icons come from Phosphor. The hero is a real-time 3D code editor in an exploded view: backplate, file explorer, glass sheet, accent frame, the editor typing out `amin.tsx`, an autocomplete popup and a terminal. The layers drift apart on load, follow the pointer, and spread further as you scroll past. The profile photo sits in the About panel.
 
 ## Features
 
-- **3D hero (Three.js):** loaded lazily. The profile photo paints first as a poster (good for LCP) and stays as the fallback when WebGL is unavailable. Rendering pauses off-screen and becomes a still frame under `prefers-reduced-motion`. Colours are read from the CSS theme tokens, so the scene follows the light/dark switch.
+- **3D editor hero (Three.js):** loaded lazily. The editor panels are painted on 2D canvases (`src/components/editorArt.ts`) and used as textures. A flat, tilted render of the editor shows first. It also stays as the fallback when WebGL is missing or software-only (SwiftShader, llvmpipe), so machines without a GPU are not slowed down. On a slow GPU the scene drops to 1x resolution, then to a still frame. Rendering pauses off-screen and is static under `prefers-reduced-motion`. The scene's page-coloured parts read the CSS theme tokens.
 - **Bilingual, RTL/LTR, pre-rendered:** Persian lives at `/` and English at `/en/`. The 3D scene mirrors itself for RTL. Switch languages with the header button or the `L` key.
 - **Dark / light themes:** follows the system setting and remembers your choice. Shortcut: `T`.
 - **Interactive terminal** (`` ` ``) and **command palette** (`⌘K` / `Ctrl+K` / `/`).
@@ -34,7 +34,8 @@ src/
 ├─ components/
 │  ├─ Portfolio.tsx                  page composition (server component)
 │  ├─ Hero, About, Skills, Experience, Contact, Footer, PrintCV   (server)
-│  ├─ HeroScene.tsx                  Three.js exploded-layers scene (client, lazy)
+│  ├─ HeroScene.tsx                  Three.js exploded 3D editor (client, lazy)
+│  ├─ editorArt.ts                   canvas painting for the editor, explorer, popup, terminal
 │  ├─ Work.tsx, Shot.tsx             featured project, screenshot gallery with 3D tilt, open source
 │  ├─ Terminal.tsx, Palette.tsx, Overlays.tsx   interactive shell, ⌘K, shortcuts (client)
 │  └─ Effects.tsx                    reveals, active nav, pointer tilt, clock (client)

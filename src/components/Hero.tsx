@@ -1,8 +1,29 @@
 import { cv } from '@/data/cv';
-import { asset, type I18n } from '@/lib/i18n';
+import type { I18n } from '@/lib/i18n';
+import type { CodeLines } from './editorArt';
 import { ActionButton } from './ActionButton';
 import { HeroScene } from './HeroScene';
 import { Icon } from './Icon';
+
+const years = () => new Date().getFullYear() - cv.person.startYear;
+
+// What the 3D editor types out.
+const CODE: CodeLines = [
+  [['c', '// amin.tsx']],
+  [['k', 'import'], ['u', ' { '], ['f', 'Developer'], ['u', ' } '], ['k', 'from'], ['s', " '@/types'"], ['u', ';']],
+  [],
+  [['k', 'export const'], ['p', ' amin'], ['u', ': '], ['f', 'Developer'], ['u', ' = {']],
+  [['p', '  name'], ['u', ': '], ['s', "'Mohammad Amin Karimi'"], ['u', ',']],
+  [['p', '  role'], ['u', ': '], ['s', "'Front-End Engineer'"], ['u', ',']],
+  [['p', '  stack'], ['u', ': ['], ['s', "'React'"], ['u', ', '], ['s', "'Next.js'"], ['u', ', '], ['s', "'TS'"], ['u', '],']],
+  [['p', '  experience'], ['u', ': '], ['n', String(years())], ['u', ', '], ['c', '// years']],
+  [['p', '  available'], ['u', ': '], ['b', 'true'], ['u', ',']],
+  [['u', '};']],
+  [],
+  [['k', 'export default function'], ['f', ' Hire'], ['u', '() {']],
+  [['k', '  return'], ['u', ' <'], ['f', 'Amin'], ['p', ' coffee'], ['u', '={'], ['n', 'Infinity'], ['u', '} />;']],
+  [['u', '}']],
+];
 
 export function Hero({ i }: { i: I18n }) {
   const p = cv.person;
@@ -22,7 +43,7 @@ export function Hero({ i }: { i: I18n }) {
             <ActionButton action="print" className="btn btn-ghost"><Icon name="download" />{i.t(cv.ui.ctaCv)}</ActionButton>
           </div>
         </div>
-        <HeroScene photo={asset('/img/profile.webp')} alt={i.t(p.name)} />
+        <HeroScene code={CODE} label={i.L('ویرایشگر کد سه‌بعدی که فایل amin.tsx را تایپ می‌کند', 'A 3D code editor typing out amin.tsx')} />
       </div>
     </section>
   );
