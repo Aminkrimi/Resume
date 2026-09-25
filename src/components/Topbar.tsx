@@ -10,12 +10,14 @@ export function Topbar({ i }: { i: I18n }) {
   return (
     <>
       <header className="topbar" id="top">
-        <a className="brand" href="#hero" aria-label="Home">
-          <span className="brand-mark">&lt;/&gt;</span>
-          <span className="brand-name">amin<b>.</b>karimi</span>
-        </a>
-        <nav className="nav" aria-label="Primary"><ul>{links}</ul></nav>
-        <Controls lang={i.lang} />
+        <div className="topbar-in">
+          <a className="brand" href="#hero" aria-label={i.t(cv.person.name)}>
+            <span className="brand-mark" aria-hidden="true">AK</span>
+            <span className="brand-name">{i.t(cv.person.name)}</span>
+          </a>
+          <nav className="nav" aria-label="Primary"><ul>{links}</ul></nav>
+          <Controls lang={i.lang} />
+        </div>
       </header>
       <nav className="dock" aria-label="Sections"><ul>{links}</ul></nav>
     </>

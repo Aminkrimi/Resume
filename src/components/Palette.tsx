@@ -66,7 +66,7 @@ export function Palette({ lang, onClose }: { lang: Lang; onClose: () => void }) 
             </li>
           )) : <li className="empty">{i.t(P.empty)}</li>}
         </ul>
-        <div className="palette-foot">{i.L('↑↓ انتخاب · ↵ اجرا · esc بستن', '↑↓ navigate · ↵ run · esc close')}</div>
+        <div className="palette-foot">{i.L('↑↓ انتخاب   ↵ اجرا   esc بستن', '↑↓ navigate   ↵ run   esc close')}</div>
       </div>
     </div>
   );

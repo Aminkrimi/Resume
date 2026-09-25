@@ -1,61 +1,78 @@
 import { cv } from '@/data/cv';
-import { pad, type I18n } from '@/lib/i18n';
-import { GithubGraph } from './GithubGraph';
+import type { I18n } from '@/lib/i18n';
 import { Icon } from './Icon';
 import { SectionHead } from './SectionHead';
-import { vars } from './style';
 
-const BAR_WIDTHS = [92, 96, 88];
+const years = () => new Date().getFullYear() - cv.person.startYear;
 
 export function About({ i }: { i: I18n }) {
   const p = cv.person;
+  const tools = cv.skills.reduce((a, g) => a + g.items.length, 0) + cv.also.length;
+  const stats = [
+    { v: years(), label: cv.ui.yearsLabel },
+    { v: cv.projects.length, label: cv.ui.projectsLabel },
+    { v: tools, label: cv.ui.stackLabel },
+  ];
+  const facts = [
+    { k: i.L('موقعیت', 'Based in'), v: i.t(p.location) },
+    { k: i.t(cv.ui.localTime), v: <span className="tnum" data-clock={i.lang}>--:--</span> },
+    { k: i.L('زبان‌ها', 'Languages'), v: i.L('فارسی (مادری)، انگلیسی', 'Persian (native), English') },
+    { k: i.t(cv.education[0].title), v: i.t(cv.education[0].org) },
+  ];
+
   return (
     <section className="section" id="about">
       <div className="wrap">
-        <SectionHead index={1} id="about" label={i.t(cv.ui.nav.about)} title={i.t(cv.ui.aboutTitle)} />
-        <div className="bento">
-          <article className="card about-text reveal">
-            <div className="card-label"><Icon name="file" /> README.md</div>
-            {cv.about.paragraphs.map((x, k) => <p key={k}>{i.t(x)}</p>)}
-          </article>
-          <article className="card about-now reveal" style={vars({ '--d': 1 })}>
-            <div className="card-label"><Icon name="pin" /> {i.L('همین حالا', 'Right now')}</div>
-            <div className="now-row"><span>{i.L('وضعیت', 'Status')}</span><b className="status"><span className="dot" />{i.t(p.availability)}</b></div>
-            <div className="now-row"><span>{i.L('موقعیت', 'Based in')}</span><b>{i.t(p.location)}</b></div>
-            <div className="now-row"><span>{i.t(cv.ui.localTime)}</span><b className="mono" data-clock={i.lang}>--:--</b></div>
-            <div className="now-row"><span>{i.L('زبان‌ها', 'Languages')}</span><b>{i.L('فارسی (مادری) · انگلیسی', 'Persian (native) · English')}</b></div>
-          </article>
-          <article className="card about-interests reveal" style={vars({ '--d': 2 })}>
-            <div className="card-label"><Icon name="bolt" /> {i.t(cv.ui.interestsTitle)}</div>
-            <div className="chips">
-              {cv.about.interests.map((x) => <span className="chip" key={x.en}><Icon name={x.icon} />{i.t(x)}</span>)}
-            </div>
-          </article>
-          <article className="card about-os reveal" style={vars({ '--d': 1 })}>
-            <div className="card-label"><Icon name="cpu" /> personality.config</div>
-            <div className="os-grid">
-              {cv.about.personality.map((x, k) => (
-                <div className="os-item" key={x.code}>
-                  <span className="code"><em>{x.code[0]}</em>{x.code.slice(1)}</span>
-                  <h4>{i.t(x.label)}</h4>
-                  <p>{i.t(x.desc)}</p>
-                  <span className="bar" style={vars({ '--w': `${BAR_WIDTHS[k]}%` })} />
+        <div className="about-grid">
+          <div className="about-copy">
+            <SectionHead title={i.t(cv.ui.aboutTitle)} />
+            {cv.about.paragraphs.map((x, k) => <p className="reveal" key={k}>{i.t(x)}</p>)}
+          </div>
+          <aside className="about-side reveal">
+            <dl className="stats">
+              {stats.map((s) => (
+                <div key={s.label.en}>
+                  <dt>{i.t(s.label)}</dt>
+                  <dd className="tnum">{i.num(s.v)}+</dd>
                 </div>
               ))}
+            </dl>
+            <dl className="facts">
+              {facts.map((f) => <div key={f.k}><dt>{f.k}</dt><dd>{f.v}</dd></div>)}
+            </dl>
+            <div className="interests">
+              <h3>{i.t(cv.ui.interestsTitle)}</h3>
+              <ul className="chips">
+                {cv.about.interests.map((x) => <li className="chip" key={x.en}><Icon name={x.icon} />{i.t(x)}</li>)}
+              </ul>
             </div>
-          </article>
-          <GithubGraph title={i.t(cv.ui.githubTitle)} />
+          </aside>
         </div>
-        <h3 className="services-title reveal">{i.t(cv.ui.servicesTitle)}</h3>
+
+        <div className="traits reveal">
+          <h3>{i.t(cv.ui.personalityTitle)}</h3>
+          <ul>
+            {cv.about.personality.map((x) => (
+              <li key={x.code}>
+                <b>{x.code}</b>
+                <span>{i.t(x.label)}</span>
+                <small>{i.t(x.desc)}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="services">
-          {cv.services.map((s, k) => (
-            <article className="card service reveal" style={vars({ '--d': k })} key={s.icon}>
-              <span className="num">{pad(k + 1)} / {pad(cv.services.length)}</span>
-              <span className="ico"><Icon name={s.icon} /></span>
-              <h3>{i.t(s.title)}</h3>
-              <p>{i.t(s.desc)}</p>
-            </article>
-          ))}
+          <h3 className="services-title reveal">{i.t(cv.ui.servicesTitle)}</h3>
+          <ul className="services-grid">
+            {cv.services.map((s, k) => (
+              <li className="service reveal" style={{ '--d': k % 2 } as React.CSSProperties} key={s.icon}>
+                <Icon name={s.icon} className="service-ico" />
+                <h4>{i.t(s.title)}</h4>
+                <p>{i.t(s.desc)}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

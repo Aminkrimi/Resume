@@ -1,44 +1,40 @@
 import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
+import { GithubGraph } from './GithubGraph';
 import { SectionHead } from './SectionHead';
-import { vars } from './style';
 
 export const LEVELS = {
-  5: { fa: 'مسلط', en: 'EXPERT' },
-  4: { fa: 'پیشرفته', en: 'ADVANCED' },
-  3: { fa: 'کاربردی', en: 'PROFICIENT' },
-  2: { fa: 'آشنا', en: 'FAMILIAR' },
-  1: { fa: 'مبتدی', en: 'LEARNING' },
+  5: { fa: 'مسلط', en: 'Expert' },
+  4: { fa: 'پیشرفته', en: 'Advanced' },
+  3: { fa: 'کاربردی', en: 'Proficient' },
+  2: { fa: 'آشنا', en: 'Familiar' },
+  1: { fa: 'مبتدی', en: 'Learning' },
 } as const;
 
-const FILE_NAMES = ['core', 'ui', 'tooling', 'backend'];
-
+/** Bento: one cell per skill group, one for the extras, one for live GitHub activity. */
 export function Skills({ i }: { i: I18n }) {
   return (
     <section className="section" id="skills">
       <div className="wrap">
-        <SectionHead index={2} id="skills" label={i.t(cv.ui.nav.skills)} title={i.t(cv.ui.skillsTitle)} lead={i.t(cv.ui.skillsLead)} />
-        <div className="skills-grid">
+        <SectionHead title={i.t(cv.ui.skillsTitle)} lead={i.t(cv.ui.skillsLead)} />
+        <div className="bento">
           {cv.skills.map((g, gi) => (
-            <article className="card skill-group reveal" style={vars({ '--d': gi })} key={g.group.en}>
-              <h3>{i.t(g.group)} <small>{FILE_NAMES[gi] ?? 'misc'}.ts</small></h3>
-              {g.items.map((s, si) => (
-                <div className="skill" key={s.name}>
-                  <span className="skill-name">{s.name}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span className="meter" role="img" aria-label={`${s.level}/5`} style={vars({ '--row': si })}>
-                      {[1, 2, 3, 4, 5].map((k) => <i key={k} className={k <= s.level ? 'on' : ''} style={vars({ '--k': k })} />)}
-                    </span>
-                    <span className="skill-level">{i.t(LEVELS[s.level])}</span>
-                  </span>
-                </div>
-              ))}
+            <article className={`cell cell-${gi} reveal`} style={{ '--d': gi % 2 } as React.CSSProperties} key={g.group.en}>
+              <h3>{i.t(g.group)}</h3>
+              <ul className="pills">
+                {g.items.map((s) => (
+                  <li key={s.name} className={`pill lv-${s.level}`} title={i.t(LEVELS[s.level])}>
+                    {s.name}<span className="sr-only"> ({i.t(LEVELS[s.level])})</span>
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
-        </div>
-        <div className="card also reveal">
-          <h4>{i.t(cv.ui.alsoTitle)}</h4>
-          {cv.also.map((a) => <span className="chip" key={a}>{a}</span>)}
+          <article className="cell cell-also reveal">
+            <h3>{i.t(cv.ui.alsoTitle)}</h3>
+            <ul className="pills">{cv.also.map((a) => <li className="pill lv-3" key={a}>{a}</li>)}</ul>
+          </article>
+          <GithubGraph title={i.t(cv.ui.githubTitle)} />
         </div>
       </div>
     </section>
