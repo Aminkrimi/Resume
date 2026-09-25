@@ -3,7 +3,6 @@ import { asset, type I18n } from '@/lib/i18n';
 import { Icon } from './Icon';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
-import { aboutSource } from '@/lib/source';
 
 const years = () => new Date().getFullYear() - cv.person.startYear;
 
@@ -80,7 +79,7 @@ export function About({ i }: { i: I18n }) {
             </ul>
           </div>
         </div>
-        <SourceView file="about.md" lines={aboutSource(i)} i={i} />
+        <SourceView file="about.md" kind="about" lang={i.lang} />
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
-import { experienceSource } from '@/lib/source';
 import { Icon } from './Icon';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
@@ -76,7 +75,7 @@ export function Experience({ i }: { i: I18n }) {
             </li>
           </ol>
         </div>
-        <SourceView file="experience.ts" lines={experienceSource(i)} i={i} />
+        <SourceView file="experience.ts" kind="experience" lang={i.lang} />
       </div>
     </section>
   );

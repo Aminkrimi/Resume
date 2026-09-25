@@ -4,7 +4,6 @@ import { GithubLive } from './GithubLive';
 import { StackGraph } from './StackGraph';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
-import { skillsSource } from '@/lib/source';
 
 export const LEVELS = {
   5: { fa: 'مسلط', en: 'Expert' },
@@ -45,7 +44,7 @@ export function Skills({ i }: { i: I18n }) {
           </div>
           <StackGraph lang={i.lang} title={i.t(cv.ui.graphTitle)} lead={i.t(cv.ui.graphLead)} />
         </div>
-        <SourceView file="skills.json" lines={skillsSource(i)} i={i} />
+        <SourceView file="skills.json" kind="skills" lang={i.lang} />
       </div>
     </section>
   );
