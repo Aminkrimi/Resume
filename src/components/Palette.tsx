@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cv } from '@/data/cv';
 import type { IconName, Lang, T } from '@/data/types';
-import { makeI18n } from '@/lib/i18n';
+import { asset, langHref, makeI18n } from '@/lib/i18n';
 import { emit, switchLang, toggleTheme } from '@/lib/client';
 import { Icon } from './Icon';
 import { SECTIONS } from './SectionHead';
@@ -34,6 +34,7 @@ export function Palette({ lang, onClose }: { lang: Lang; onClose: () => void }) 
     { label: i.t(P.print), kw: `${both(P.print)} cv pdf`, icon: 'download', run: () => window.print() },
     { label: i.t(P.github), kw: both(P.github), icon: 'github', run: () => window.open('https://github.com/Aminkrimi', '_blank', 'noopener') },
     { label: i.t(P.telegram), kw: both(P.telegram), icon: 'telegram', run: () => window.open('https://t.me/AminKrimi', '_blank', 'noopener') },
+    { label: i.t(cv.ui.changelogLink), kw: 'changelog history git log releases تغییرات', icon: 'commit', run: () => window.location.assign(asset(`${langHref(lang)}changelog/`)) },
     { label: i.t(P.top), kw: both(P.top), icon: 'up', run: () => scrollTo({ top: 0, behavior: smooth() }) },
     // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [lang]);

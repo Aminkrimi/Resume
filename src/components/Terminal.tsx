@@ -3,11 +3,12 @@
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
-import { makeI18n } from '@/lib/i18n';
+import { asset, langHref, makeI18n } from '@/lib/i18n';
 import { emit, switchLang, toggleTheme } from '@/lib/client';
 import { aboutSource, contactSource, experienceSource, skillsSource, workSource } from '@/lib/source';
 import { fmtVitals, getVitals, goodVitals } from '@/lib/vitals';
 import { loadGithub, timeAgo } from '@/lib/github';
+import { LH_LABELS, loadLighthouse } from '@/lib/lighthouse';
 import type { CodeLines } from './editorArt';
 import { FILES } from './SectionHead';
 
@@ -16,6 +17,14 @@ type Line = { id: number; node: ReactNode; fa?: boolean };
 const C = ({ c, children }: { c: string; children: ReactNode }) => <span className={`t-${c}`}>{children}</span>;
 const Prompt = () => <><C c="p">amin@karimi</C><C c="m">:</C><C c="d">~</C><C c="m">$</C></>;
 const ext = { target: '_blank', rel: 'noopener' } as const;
+/** Real-world one-liners for the typing test. */
+const SNIPPETS = [
+  "const user = await fetch('/api/me').then((r) => r.json());",
+  'export default function App() { return <Layout title="Home" />; }',
+  'const total = items.filter(Boolean).reduce((sum, x) => sum + x.price, 0);',
+  'useEffect(() => { const id = setInterval(tick, 1000); return () => clearInterval(id); }, []);',
+  "type User = { id: string; name: string; roles: Array<'admin' | 'dev'> };",
+];
 const HASHES = ['a3f9c21', '7be04d9', '4c2e81f', '19d7a3b', 'e5b6f02'];
 const SOURCES: Record<string, (i: ReturnType<typeof makeI18n>) => CodeLines> = {
   [FILES.about]: aboutSource, [FILES.skills]: skillsSource, [FILES.experience]: experienceSource, [FILES.work]: workSource, [FILES.contact]: contactSource,
@@ -31,6 +40,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
   const nextId = useRef(0);
   const input = useRef<HTMLInputElement>(null);
   const body = useRef<HTMLDivElement>(null);
+  const test = useRef<{ text: string; start: number } | null>(null);
 
   const print = (node: ReactNode, fa = false) => setLines((ls) => [...ls, { id: nextId.current++, node, fa }]);
   const printFa = (node: ReactNode) => print(node, lang === 'fa');
@@ -58,7 +68,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         ['theme', 'تغییر تم', 'toggle theme'], ['lang', 'تغییر زبان', 'switch language'], ['cv', 'دانلود رزومه', 'print / save CV'],
         ['cat <file>', 'نمایش سورس یک بخش', 'print a section\'s source'], ['ls', 'فهرست فایل‌ها', 'list files'],
         ['git log', 'کامیت‌های واقعی گیت‌هاب', 'real GitHub commits'], ['git branch', 'برنچ‌های کاری', 'career branches'],
-        ['neofetch', 'مشخصات سیستم', 'system info'], ['perf', 'کارایی همین بازدید', 'live web vitals'],
+        ['typing-test', 'تست سرعت تایپ کد', 'code typing speed test'], ['lighthouse', 'امتیاز Lighthouse', 'Lighthouse scores from CI'], ['changelog', 'تاریخچهٔ تغییرات سایت', 'site changelog'], ['neofetch', 'مشخصات سیستم', 'system info'], ['perf', 'کارایی همین بازدید', 'live web vitals'],
         ['source', 'نمای سورس صفحه', 'toggle source view'], ['inspect', 'حالت Inspect', 'inspect elements'],
         ['clear', 'پاک کردن صفحه', 'clear screen'], ['exit', 'بستن ترمینال', 'close terminal'],
       ] as const).map(([c, fa, en]) => <span key={c}>{'  '}<C c="a">{c.padEnd(12)}</C>{i.L(fa, en)}{'\n'}</span>)}
@@ -111,6 +121,21 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         print(<>usage: git <C c="a">log</C> | <C c="a">branch</C> | <C c="a">status</C></>);
       }
     },
+    lighthouse: () => {
+      loadLighthouse().then((lh) => {
+        if (!lh) return print(<C c="m">{i.L('امتیاز Lighthouse برای این بیلد موجود نیست (فقط در بیلد CI ساخته می‌شود).', 'No Lighthouse scores for this build (they are generated in CI).')}</C>);
+        print(<C c="y">Lighthouse {lh.lighthouse}, {lh.device}{lh.sha ? `, commit ${lh.sha.slice(0, 7)}` : ''}</C>);
+        LH_LABELS.forEach(([k, label]) => { const v = lh.scores[k]; print(<>{'  '}{label.padEnd(16)}<C c={v >= 90 ? 'p' : v >= 50 ? 'y' : 'e'}>{v}</C></>); });
+        print(<C c="m">{'  '}{(['fcp', 'lcp', 'tbt', 'cls'] as const).map((m) => `${m.toUpperCase()} ${lh.metrics[m].display}`).join('   ')}</C>);
+      });
+    },
+    changelog: () => { window.location.assign(asset(`${langHref(lang)}changelog/`)); },
+    'typing-test': () => {
+      const text = SNIPPETS[Math.floor(Math.random() * SNIPPETS.length)];
+      test.current = { text, start: 0 };
+      printFa(<C c="m">{i.L('این خط را دقیق تایپ کن و Enter بزن (تایمر با اولین کلید شروع می‌شود، Esc برای لغو):', 'Type this line exactly and press Enter. The timer starts on your first key; Esc cancels.')}</C>);
+      print(<C c="y">{text}</C>);
+    },
     neofetch: () => {
       const years = new Date().getFullYear() - cv.person.startYear;
       const art = ['     /\\     ', '    /  \\    ', '   / /\\ \\   ', '  / ____ \\  ', ' /_/    \\_\\ ', '             '];
@@ -137,7 +162,20 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     sudo: () => print(<><C c="e">{i.L('دسترسی رد شد. ولی می‌تونی منو استخدام کنی:', 'Permission denied. You can hire me instead:')}</C> <a href={`mailto:${cv.person.email}`}>{cv.person.email}</a></>),
     echo: (...a) => print(a.join(' ')),
   };
-  const ALIASES: Record<string, string> = { exp: 'experience', work: 'projects', '?': 'help', 'hire-me': 'sudo', vitals: 'perf' };
+  const ALIASES: Record<string, string> = { exp: 'experience', work: 'projects', '?': 'help', 'hire-me': 'sudo', vitals: 'perf', typing: 'typing-test', wpm: 'typing-test' };
+
+  /** Scores a finished typing test: words per minute (5 chars = 1 word) and per-character accuracy. */
+  const finishTest = (typed: string) => {
+    const t = test.current!;
+    test.current = null;
+    const secs = t.start ? (performance.now() - t.start) / 1000 : 0;
+    const right = [...t.text].filter((ch, k) => typed[k] === ch).length;
+    const accuracy = Math.round((right / Math.max(t.text.length, typed.length)) * 100);
+    const wpm = secs > 0 ? Math.round((typed.length / 5) / (secs / 60)) : 0;
+    print(<>{[...typed].map((ch, k) => <span key={k} className={ch === t.text[k] ? 't-w' : 't-e'}>{ch}</span>)}</>);
+    print(<><C c="m">WPM</C> <C c="p">{wpm}</C>   <C c="m">accuracy</C> <C c={accuracy >= 95 ? 'p' : 'y'}>{accuracy}%</C>   <C c="m">time</C> {secs.toFixed(1)}s</>);
+    printFa(<C c="m">{accuracy < 90 ? i.L('دوباره امتحان کن: typing-test', 'Try again: typing-test') : wpm >= 60 ? i.L('سریع! شبیه کسی که هر روز کد می‌زند.', 'Fast. You clearly write code every day.') : i.L('خوب بود. یک دور دیگر؟ typing-test', 'Nice. Another round? typing-test')}</C>);
+  };
 
   const run = (raw: string) => {
     const line = raw.trim();
@@ -154,6 +192,12 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
 
   const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
     const h = history.current;
+    if (test.current) {
+      if (e.key === 'Enter') { e.preventDefault(); finishTest(value); setValue(''); }
+      else if (e.key === 'Escape') { test.current = null; setValue(''); print(<C c="m">{i.L('تست لغو شد', 'test cancelled')}</C>); }
+      else if (e.key === 'Tab') e.preventDefault();
+      return;
+    }
     if (e.key === 'Enter') { run(value); setValue(''); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); if (hpos.current > 0) setValue(h[--hpos.current]); }
     else if (e.key === 'ArrowDown') { e.preventDefault(); hpos.current = Math.min(h.length, hpos.current + 1); setValue(h[hpos.current] ?? ''); }
@@ -182,7 +226,8 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
           {lines.map((l) => <div key={l.id} className={`out${l.fa ? ' fa' : ''}`}>{l.node}</div>)}
           <label className="term-row">
             <Prompt />
-            <input ref={input} value={value} onChange={(e) => setValue(e.target.value)} onKeyDown={onKey}
+            <input ref={input} value={value} onChange={(e) => { if (test.current && !test.current.start) test.current.start = performance.now(); setValue(e.target.value); }}
+              onPaste={(e) => { if (test.current) e.preventDefault(); }} onKeyDown={onKey}
               type="text" autoComplete="off" autoCapitalize="off" spellCheck={false} aria-label="Terminal input" />
           </label>
         </div>

@@ -4,7 +4,7 @@ import type { Lang } from '@/data/types';
 import { asset, langHref } from './i18n';
 
 /** Tiny event bus so server-rendered buttons can talk to client overlays. */
-export type CvEvent = 'terminal' | 'palette' | 'print' | 'copy-email' | 'toast' | 'inspect' | 'source';
+export type CvEvent = 'terminal' | 'palette' | 'print' | 'copy-email' | 'toast' | 'inspect' | 'source' | 'focus-skill';
 export const emit = (name: CvEvent, detail?: string) => window.dispatchEvent(new CustomEvent(`cv:${name}`, { detail }));
 export const on = (name: CvEvent, fn: (detail?: string) => void) => {
   const h = (e: Event) => fn((e as CustomEvent<string>).detail);
@@ -53,11 +53,22 @@ export function toggleSource(): boolean {
   return on;
 }
 
+/** Vim-style section jumps: j / k move to the next / previous section. */
+export function jumpSection(dir: 1 | -1) {
+  const offset = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  const tops = [...document.querySelectorAll<HTMLElement>('main > section')].map((s) => ({ s, top: s.getBoundingClientRect().top - offset }));
+  const target = dir > 0 ? tops.find((x) => x.top > 4) : [...tops].reverse().find((x) => x.top < -4);
+  target?.s.scrollIntoView({ behavior: prefersReduced() ? 'auto' : 'smooth' });
+}
+
 /** Languages are separate static pages: / (fa) and /en/ (en). Keep the current section. */
 export function switchLang(current: Lang) {
   const next: Lang = current === 'fa' ? 'en' : 'fa';
   store.set('cv-lang', next);
-  window.location.assign(asset(langHref(next)) + window.location.hash);
+  // Stay on the same page (home or /changelog/) in the other language.
+  let path = window.location.pathname.slice(asset('').length) || '/';
+  if (path.startsWith('/en/')) path = path.slice(3);
+  window.location.assign(asset(next === 'fa' ? path : `/en${path === '/' ? '/' : path}`) + window.location.hash);
 }
 
 export async function copyText(text: string) {

@@ -112,6 +112,13 @@ export function contactSource(i: I18n): CodeLines {
     ...p.social.filter((s) => s.id !== 'mail').map((s) => open(s.url)),
     [],
     [['f', 'mail'], ['u', ' -s '], ['s', '"Hello Amin"'], ['u', ' '], ['s', '"$EMAIL"'], ['u', ' < '], ['p', 'idea.md']],
+    ...(process.env.NEXT_PUBLIC_FORM_ENDPOINT ? [
+      [],
+      [['c', '# or the same request the form on this page sends']],
+      [['f', 'curl'], ['u', ' -X POST '], ['s', `"${process.env.NEXT_PUBLIC_FORM_ENDPOINT}"`], ['u', ' \\']],
+      [['u', '  -H '], ['s', "'Content-Type: application/json'"], ['u', ' \\']],
+      [['u', '  -d '], ['s', `'{"name":"Ada","email":"ada@example.com","message":"Hi"}'`]],
+    ] as CodeLines : []),
   ];
 }
 

@@ -1,6 +1,7 @@
 import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
 import { GithubLive } from './GithubLive';
+import { StackGraph } from './StackGraph';
 import { SectionHead } from './SectionHead';
 import { SourceView } from './SourceView';
 import { skillsSource } from '@/lib/source';
@@ -42,6 +43,7 @@ export function Skills({ i }: { i: I18n }) {
               stars: i.t(cv.ui.ghStars), error: i.t(cv.ui.ghError), empty: i.t(cv.ui.ghEmpty), profile: i.t(cv.ui.ghProfile),
             }} />
           </div>
+          <StackGraph lang={i.lang} title={i.t(cv.ui.graphTitle)} lead={i.t(cv.ui.graphLead)} />
         </div>
         <SourceView file="skills.json" lines={skillsSource(i)} i={i} />
       </div>

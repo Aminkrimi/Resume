@@ -1,15 +1,39 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { prefersReduced } from '@/lib/client';
+import { emit, prefersReduced } from '@/lib/client';
 import {
-  EDITOR_PX, SUGGEST_PX, TERM_PX, TREE_PX, drawEditor, drawSuggest, drawTerminal, drawTree, monoFamily, totalChars,
+  EDITOR_PX, SUGGEST_PX, TERM_PX, TREE_PX, drawEditor, drawSuggest, drawTerminal, drawTree, monoFamily, suggestRowAt, totalChars, treeRowAt,
   type CodeLines,
 } from './editorArt';
-import { FILES } from './SectionHead';
 
+/** Explorer rows: each file opens the section it stands for. */
+const TREE: [file: string, section: string][] = [
+  ['amin.tsx', 'hero'], ['about.md', 'about'], ['skills.json', 'skills'], ['experience.ts', 'experience'],
+  ['projects.ts', 'work'], ['playground.ts', 'playground'], ['contact.sh', 'contact'],
+];
 const SUGGESTIONS: [string, string][] = [['React', 'library'], ['Next.js', 'framework'], ['TypeScript', 'language'], ['Three.js', '3d']];
 const TYPE_SPEED = 44; // characters per second
+
+/** True when WebGL is missing or software-rendered; checked before three.js is even downloaded. */
+function softwareOnlyGL() {
+  try {
+    const gl = document.createElement('canvas').getContext('webgl2') ?? document.createElement('canvas').getContext('webgl');
+    if (!gl) return true;
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const gpu = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpu);
+  } catch {
+    return true;
+  }
+}
+
+/** Resolves once the page has loaded and the main thread is idle, so 3D never competes with first paint. */
+const afterLoadIdle = () => new Promise<void>((done) => {
+  const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(() => done(), { timeout: 2500 }) : setTimeout(done, 300));
+  if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+});
 
 const canvasOf = ({ w, h }: { w: number; h: number }) => Object.assign(document.createElement('canvas'), { width: w, height: h });
 
@@ -41,6 +65,11 @@ export function HeroScene({ code, label }: { code: CodeLines; label: string }) {
     let cleanup = () => {};
 
     (async () => {
+      // No GPU or data saver: keep the flat editor and never download three.js.
+      const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+      if (saveData || softwareOnlyGL()) return;
+      await afterLoadIdle();
+      if (disposed) return;
       const THREE = await import('three');
       const { RoundedBoxGeometry } = await import('three/examples/jsm/geometries/RoundedBoxGeometry.js');
       const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
@@ -128,14 +157,16 @@ export function HeroScene({ code, label }: { code: CodeLines; label: string }) {
         const face = new THREE.Mesh(geo, track(new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })));
         face.position.z = 0.045;
         g.add(face);
-        return { group: g, tex };
+        return { group: g, tex, face };
       };
 
       // ---- Panels ----
       const editorCv = canvasOf(EDITOR_PX), treeCv = canvasOf(TREE_PX), suggestCv = canvasOf(SUGGEST_PX), termCv = canvasOf(TERM_PX);
       const eCtx = editorCv.getContext('2d')!, tCtx = termCv.getContext('2d')!;
-      drawTree(treeCv.getContext('2d')!, Object.values(FILES), 'amin.tsx', mono);
-      drawSuggest(suggestCv.getContext('2d')!, SUGGESTIONS, 0, mono);
+      const trCtx = treeCv.getContext('2d')!, sgCtx = suggestCv.getContext('2d')!;
+      const files = TREE.map(([f]) => f);
+      drawTree(trCtx, files, mono);
+      drawSuggest(sgCtx, SUGGESTIONS, 0, mono);
 
       let shown = reduced ? total : 0, caretOn = !reduced, built = reduced;
       const paintEditor = () => drawEditor(eCtx, code, shown, caretOn, mono);
@@ -207,6 +238,51 @@ export function HeroScene({ code, label }: { code: CodeLines; label: string }) {
         pointer.x = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
         pointer.y = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
       };
+
+      // ---- Interaction: the panels are real controls ----
+      // Explorer files jump to their section, autocomplete items trace that technology in the
+      // dependency graph, the editor opens the playground and the terminal panel opens the terminal.
+      const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+      const targets = [
+        { mesh: tree.face, kind: 'tree' }, { mesh: suggest.face, kind: 'suggest' },
+        { mesh: editor.face, kind: 'editor' }, { mesh: term.face, kind: 'term' },
+      ] as const;
+      type Hit = { kind: (typeof targets)[number]['kind']; row: number } | null;
+      let hover: Hit = null;
+      const hitAt = (e: MouseEvent): Hit => {
+        const r = renderer.domElement.getBoundingClientRect();
+        ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+        ray.setFromCamera(ndc, camera);
+        const first = ray.intersectObjects(targets.map((x) => x.mesh), false)[0];
+        if (!first?.uv) return null;
+        const kind = targets.find((x) => x.mesh === first.object)!.kind;
+        const y = 1 - first.uv.y;
+        if (kind === 'tree') { const row = treeRowAt(y * TREE_PX.h, TREE.length); return row < 0 ? null : { kind, row }; }
+        if (kind === 'suggest') { const row = suggestRowAt(y * SUGGEST_PX.h, SUGGESTIONS.length); return row < 0 ? null : { kind, row }; }
+        return { kind, row: 0 };
+      };
+      const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+      const onHover = (e: PointerEvent) => {
+        const h = hitAt(e);
+        if (h?.kind === hover?.kind && h?.row === hover?.row) return;
+        hover = h;
+        renderer.domElement.style.cursor = h ? 'pointer' : '';
+        drawTree(trCtx, files, mono, h?.kind === 'tree' ? h.row : -1);
+        tree.tex.needsUpdate = true;
+        drawSuggest(sgCtx, SUGGESTIONS, h?.kind === 'suggest' ? h.row : 0, mono);
+        suggest.tex.needsUpdate = true;
+        if (!running) render();
+      };
+      const onClick = (e: MouseEvent) => {
+        const h = hitAt(e);
+        if (!h) return;
+        if (h.kind === 'tree') go(TREE[h.row][1]);
+        else if (h.kind === 'suggest') emit('focus-skill', SUGGESTIONS[h.row][0]);
+        else if (h.kind === 'editor') go('playground');
+        else emit('terminal');
+      };
+      renderer.domElement.addEventListener('click', onClick);
+      if (matchMedia('(pointer: fine)').matches) renderer.domElement.addEventListener('pointermove', onHover, { passive: true });
 
       const born = performance.now();
       let last = born, t = 0, intro = reduced ? 1 : 0, raf = 0, running = false;
@@ -287,6 +363,8 @@ export function HeroScene({ code, label }: { code: CodeLines; label: string }) {
         stop();
         ro.disconnect(); io.disconnect(); mo.disconnect();
         removeEventListener('pointermove', onPointer);
+        renderer.domElement.removeEventListener('click', onClick);
+        renderer.domElement.removeEventListener('pointermove', onHover);
         disposables.forEach((d) => d.dispose());
         renderer.dispose();
         renderer.domElement.remove();

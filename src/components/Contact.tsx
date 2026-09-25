@@ -1,6 +1,7 @@
 import { cv } from '@/data/cv';
 import type { I18n } from '@/lib/i18n';
 import { ActionButton } from './ActionButton';
+import { ApiForm, type ApiLabels } from './ApiForm';
 import { Icon } from './Icon';
 import { SourceView } from './SourceView';
 import { contactSource } from '@/lib/source';
@@ -31,6 +32,8 @@ export function Contact({ i }: { i: I18n }) {
               </a>
             </li>
           </ul>
+          <h3 className="api-title reveal">{i.t(cv.ui.apiTitle)}</h3>
+          <ApiForm l={Object.fromEntries(Object.entries(cv.ui.api).map(([k, t]) => [k, i.t(t)])) as ApiLabels} />
         </div>
         <SourceView file="contact.sh" lines={contactSource(i)} i={i} />
       </div>
