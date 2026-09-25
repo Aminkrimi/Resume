@@ -108,7 +108,15 @@ export function drawEditor(ctx: CanvasRenderingContext2D, lines: CodeLines, show
   }
 }
 
-export function drawTree(ctx: CanvasRenderingContext2D, files: string[], active: string, mono: string) {
+const TREE_TOP = 192, TREE_ROW = 64, SUGGEST_PAD = 12;
+
+/** Which explorer row sits at canvas y (pixels), or -1. */
+export const treeRowAt = (y: number, count: number) => { const k = Math.round((y - TREE_TOP) / TREE_ROW); return k >= 0 && k < count && Math.abs(y - (TREE_TOP + k * TREE_ROW)) <= 30 ? k : -1; };
+/** Which autocomplete row sits at canvas y (pixels), or -1. */
+export const suggestRowAt = (y: number, count: number) => { const k = Math.floor((y - SUGGEST_PAD) / ((SUGGEST_PX.h - SUGGEST_PAD * 2) / count)); return k >= 0 && k < count ? k : -1; };
+
+/** `files[0]` is the open file; `hover` outlines a row the pointer is over. */
+export function drawTree(ctx: CanvasRenderingContext2D, files: string[], mono: string, hover = -1) {
   const { w: W, h: H } = TREE_PX;
   ctx.fillStyle = '#0d0f13';
   ctx.fillRect(0, 0, W, H);
@@ -119,9 +127,13 @@ export function drawTree(ctx: CanvasRenderingContext2D, files: string[], active:
   ctx.font = `500 24px ${mono}`;
   ctx.fillStyle = C.text;
   ctx.fillText('v  portfolio', 36, 124);
-  const all = [active, ...files];
-  all.forEach((f, k) => {
-    const y = 192 + k * 64;
+  const active = files[0];
+  files.forEach((f, k) => {
+    const y = TREE_TOP + k * TREE_ROW;
+    if (k === hover && f !== active) {
+      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      ctx.fillRect(0, y - 30, W, 60);
+    }
     if (f === active) {
       ctx.fillStyle = C.accentSoft;
       ctx.fillRect(0, y - 30, W, 60);
@@ -143,9 +155,9 @@ export function drawSuggest(ctx: CanvasRenderingContext2D, items: [label: string
   ctx.lineWidth = 3;
   ctx.strokeRect(1.5, 1.5, W - 3, H - 3);
   ctx.textBaseline = 'middle';
-  const rh = (H - 24) / items.length;
+  const rh = (H - SUGGEST_PAD * 2) / items.length;
   items.forEach(([label, detail], k) => {
-    const y = 12 + k * rh;
+    const y = SUGGEST_PAD + k * rh;
     if (k === selected) {
       ctx.fillStyle = C.accentSoft;
       ctx.fillRect(10, y + 4, W - 20, rh - 8);

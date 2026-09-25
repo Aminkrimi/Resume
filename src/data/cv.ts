@@ -81,6 +81,29 @@ export const cv = {
       fa: 'ابزارهایی که هر روز با آن‌ها محصول می‌سازم. پررنگ‌ها ابزارهای روزمره‌ام هستند.',
       en: 'The tools I ship with every day. Solid ones are my daily drivers.'
     },
+    lhTitle: { fa: 'امتیاز Lighthouse همین نسخه', en: 'Lighthouse scores for this build' },
+    lhNote: { fa: 'موبایل، اندازه‌گیری‌شده در CI روی هر دیپلوی، کامیت', en: 'mobile, measured in CI on every deploy, commit' },
+    apiTitle: { fa: 'یا مستقیم یک درخواست بفرست', en: 'Or send a request' },
+    api: {
+      send: { fa: 'ارسال', en: 'Send' },
+      sending: { fa: 'در حال ارسال...', en: 'Sending...' },
+      idle: { fa: 'درخواست را بفرست تا پاسخ اینجا نمایش داده شود.', en: 'Send the request to see the response here.' },
+      mailto: { fa: 'برنامهٔ ایمیلت با پیام آماده باز شد؛ فقط ارسال را بزن.', en: 'Your mail app opened with the message ready. Just hit send.' },
+      network: { fa: 'ارسال نشد. اتصال را بررسی کن و دوباره امتحان کن.', en: 'The request did not go through. Check your connection and try again.' },
+      name: { fa: 'اسمت', en: 'Your name' },
+      email: { fa: 'you@example.com', en: 'you@example.com' },
+      message: { fa: 'درباره‌ی پروژه یا نقش بنویس', en: 'Tell me about the project or role' },
+      errName: { fa: 'اسمت را بنویس (حداقل ۲ حرف).', en: 'Add your name (at least 2 characters).' },
+      errEmail: { fa: 'این ایمیل معتبر به نظر نمی‌رسد.', en: 'That email does not look valid.' },
+      errMessage: { fa: 'پیام کمی کوتاه است (حداقل ۱۰ حرف).', en: 'The message is a bit short (at least 10 characters).' }
+    },
+    changelogTitle: { fa: 'تاریخچهٔ تغییرات', en: 'Changelog' },
+    changelogLead: { fa: 'هر تغییری که روی این سایت نشسته، مستقیم از git log همین ریپو و هنگام بیلد ساخته می‌شود.', en: 'Every change that landed on this site, generated from this repository\'s own git log at build time.' },
+    changelogEmpty: { fa: 'تاریخچهٔ گیت در این بیلد در دسترس نبود.', en: 'Git history was not available for this build.' },
+    changelogLink: { fa: 'تاریخچهٔ تغییرات', en: 'Changelog' },
+    backHome: { fa: 'برگشت به رزومه', en: 'Back to the portfolio' },
+    graphTitle: { fa: 'گراف وابستگی', en: 'Dependency graph' },
+    graphLead: { fa: 'هر تکنولوژی به پروژه‌هایی که از آن استفاده کرده‌اند وصل است. روی یک گره برو یا بزن.', en: 'Every technology, wired to the projects that use it. Hover or tap a node to trace it.' },
     alsoTitle: { fa: 'آشنا با', en: 'Also comfortable with' },
     experienceTitle: { fa: 'مسیر کاری', en: 'Where I have worked' },
     educationTitle: { fa: 'تحصیلات', en: 'Education' },
@@ -116,7 +139,7 @@ export const cv = {
       inspect: { fa: 'حالت Inspect (مثل DevTools)', en: 'Inspect elements (like DevTools)' },
       top: { fa: 'برگشت به بالا', en: 'Back to top' }
     },
-    shortcuts: { fa: '⌘K فرمان‌ها، ` ترمینال، S سورس، I اینسپکت، T تم، L زبان', en: '⌘K commands, ` terminal, S source, I inspect, T theme, L language' },
+    shortcuts: { fa: '⌘K فرمان‌ها، ` ترمینال، S سورس، I اینسپکت، T تم، L زبان، j/k بخش‌ها', en: '⌘K commands, ` terminal, S source, I inspect, T theme, L language, j/k sections' },
     sourceView: { fa: 'نمای سورس', en: 'Source view' },
     sourceOn: { fa: 'نمای سورس روشن شد؛ هر بخش حالا کد خودش است. S برای برگشت.', en: 'Source view on. Each section now shows its code. Press S to switch back.' },
     sourceOff: { fa: 'برگشت به نمای عادی', en: 'Back to the regular view' },
@@ -407,6 +430,14 @@ export const cv = {
       code: 'https://github.com/Aminkrimi/HuffmanCode',
       stack: ['Algorithms', 'DP', 'Trees'],
       glyph: 'tree'
+    },
+    {
+      id: 'portfolio',
+      title: { fa: 'همین سایت', en: 'This portfolio' },
+      desc: { fa: 'رزومهٔ دوزبانه با Next.js، هیروی سه‌بعدی Three.js، ترمینال و Playground؛ کاملاً اوپن‌سورس.', en: 'This bilingual résumé: Next.js, a Three.js hero, a terminal and a code playground, fully open source.' },
+      code: 'https://github.com/Aminkrimi/Resume',
+      stack: ['Next.js', 'TypeScript', 'Three.js', 'WebGL'],
+      glyph: 'code'
     }
   ]
 } satisfies CV;

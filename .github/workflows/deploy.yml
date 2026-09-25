@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for the changelog page
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -34,7 +36,17 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
+          # Optional: a Formspree (or similar) endpoint for the contact form, set under
+          # Settings > Secrets and variables > Actions > Variables. Without it the form uses mailto.
+          NEXT_PUBLIC_FORM_ENDPOINT: ${{ vars.FORM_ENDPOINT }}
           BASE_PATH: ${{ steps.pages.outputs.base_path || '/Resume' }}
+      # Scores are written to out/lighthouse.json and shown on the site. Never blocks a deploy.
+      - name: Lighthouse
+        continue-on-error: true
+        run: node scripts/lighthouse.mjs
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path || '/Resume' }}
+          GITHUB_SHA: ${{ github.sha }}
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:

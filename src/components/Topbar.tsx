@@ -11,7 +11,7 @@ export function Topbar({ i }: { i: I18n }) {
     <>
       <header className="topbar" id="top">
         <div className="topbar-in">
-          <a className="brand" href="#hero" aria-label={i.t(cv.person.name)}>
+          <a className="brand" href="#hero">
             <span className="brand-mark" aria-hidden="true">AK</span>
             <span className="brand-name">{i.t(cv.person.name)}</span>
           </a>
