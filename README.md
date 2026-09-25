@@ -1,12 +1,12 @@
 # Mohammad Amin Karimi — Portfolio / رزومه
 
-A bilingual (فارسی / English) personal site with dark and light themes, built with plain HTML, CSS and JS. There is no build step.
+A bilingual (فارسی / English) developer portfolio built with **Next.js 16 (App Router) + React 19 + TypeScript**. It is statically exported (`output: 'export'`) and deployed to GitHub Pages by GitHub Actions.
 
 **Concept — "Source":** the resume is presented as a codebase. The hero shows a code editor that types out `amin.tsx`, sections are named like files (`about.md`, `skills.json`, `experience.log`, `projects/`), the work history reads like a `git log`, and there's a real interactive terminal. The palette is blue and cyan.
 
 ## Features
 
-- **Bilingual, RTL/LTR:** Persian is the default. Switch with the header button or the `L` key. You can link straight to English with `?lang=en`.
+- **Bilingual, RTL/LTR, pre-rendered:** Persian lives at `/` and English at `/en/`. Both are static HTML pages, which is better for SEO. Switch with the header button or the `L` key.
 - **Dark / light themes (blue palette):** follows the system setting and remembers your choice. The switch animates as a circular reveal (View Transitions API). Shortcut: `T`.
 - **Interactive terminal:** open it with the `` ` `` key or the hero button. Commands include `help`, `whoami`, `skills`, `experience`, `projects`, `open <id>`, `contact`, `theme`, `lang`, `cv`, and `sudo hire-me` 😄. It supports history (↑/↓) and Tab completion.
 - **Command palette:** open with `⌘K` / `Ctrl+K` or `/`.
@@ -15,30 +15,45 @@ A bilingual (فارسی / English) personal site with dark and light themes, bui
 
 ## Sido screenshot
 
-The Sido card shows a browser mock until you add a real screenshot. Save a 16:10 capture of https://sido.ir as `assets/img/sido.webp` (or `.jpg`, then update `img` in `data.js`) and it will appear automatically.
+The Sido card shows a browser mock until you add a real screenshot. Save a 16:10 capture of https://sido.ir as `public/img/sido.webp` (or `.jpg`, then update `img` in `src/data/cv.ts`) and it will appear automatically.
 
 ## Editing content
 
-**All text lives in [`assets/js/data.js`](assets/js/data.js).** Every field has the form `{ fa, en }`. To update the resume you edit this one file: skills (`level` 1–5), experience, projects (`cat` sets the filter tags) and contact links.
+**All text lives in [`src/data/cv.ts`](src/data/cv.ts)** and is type-checked against `src/data/types.ts`. Every field has the form `{ fa, en }`. To update the resume you edit this one file: skills (`level` 1–5), experience, projects (`cat` sets the filter tags) and contact links.
 
 ## Structure
 
 ```
-index.html             page shell + SVG icon sprite
-assets/css/main.css    design tokens (dark/light), layout, print CV
-assets/js/data.js      all content (FA + EN)
-assets/js/main.js      rendering + interactions
-assets/img/            optimized WebP images, favicon
-content/               original images + IRANSans fonts
-Resume.html            redirects to index.html (keeps old links working)
+src/
+├─ app/
+│  ├─ (fa)/layout.tsx, page.tsx      → /      (Persian, RTL)
+│  ├─ (en)/en/layout.tsx, page.tsx   → /en/   (English, LTR)
+│  ├─ globals.css                    design tokens (dark/light), layout, print CV
+│  └─ fonts/                         IRANSans (self-hosted)
+├─ components/
+│  ├─ Portfolio.tsx                  page composition (server component)
+│  ├─ Hero, About, Skills, Experience, Contact, Footer, PrintCV   (server)
+│  ├─ Work.tsx                       project grid + filters (client)
+│  ├─ Terminal.tsx, Palette.tsx, Overlays.tsx   interactive shell, ⌘K, shortcuts (client)
+│  ├─ Effects.tsx                    scroll reveal, counters, clock, spotlight (client)
+│  └─ Typers.tsx                     typing role + code editor (client)
+├─ data/cv.ts, types.ts              all content (FA + EN), typed
+└─ lib/                              i18n helpers, client utilities, metadata
+public/img/                          optimized WebP images, favicon
+.github/workflows/deploy.yml         lint → typecheck → build → deploy to Pages
 ```
 
-## Run locally
-
-Open `index.html` directly, or serve the folder:
+## Develop
 
 ```bash
-npx serve .
+npm install
+npm run dev         # http://localhost:3000
+npm run lint        # ESLint (next config)
+npm run typecheck   # tsc --noEmit
+npm run build       # static export to ./out
 ```
 
-To publish on GitHub Pages: Settings → Pages → deploy from branch → root.
+## Deploy (GitHub Pages)
+
+1. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. Push to `main`. The workflow builds with `BASE_PATH=/Resume` and publishes to https://aminkrimi.github.io/Resume/
