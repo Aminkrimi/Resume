@@ -14,6 +14,8 @@ export interface Job { period: T; title: T; org: T; current?: boolean; branch: s
 export interface Project {
   id: string;
   featured?: boolean;
+  /** Label above a featured project's title; defaults to ui.featured. */
+  tag?: T;
   title: T;
   desc: T;
   /** Screenshot under /public. If the file is missing the card falls back to its text layout. */
@@ -22,6 +24,10 @@ export interface Project {
   code?: string;
   stack: string[];
   highlights?: T[];
+  /** Headline numbers for a featured project. */
+  stats?: { value: number; plus?: boolean; label: T }[];
+  /** Shown instead of a link when the project has no public URL or repository. */
+  note?: T;
   glyph?: IconName;
 }
 

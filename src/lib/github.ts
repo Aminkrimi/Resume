@@ -19,11 +19,18 @@ async function get<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+/** First line of a commit message; a merged pull request shows its title instead of "Merge pull request #n from …". */
+function subject(message: string) {
+  const [first, ...rest] = message.split('\n');
+  const title = /^Merge pull request #\d+/.test(first) ? rest.find((l) => l.trim()) : undefined;
+  return title?.trim() ?? first;
+}
+
 let inflight: Promise<GhStats> | null = null;
 
 export function loadGithub(): Promise<GhStats> {
   try {
-    const hit = JSON.parse(sessionStorage.getItem('cv-gh') ?? 'null') as { at: number; data: GhStats } | null;
+    const hit = JSON.parse(sessionStorage.getItem('cv-gh-v2') ?? 'null') as { at: number; data: GhStats } | null;
     if (hit && Date.now() - hit.at < TTL) return Promise.resolve(hit.data);
   } catch { /* storage unavailable */ }
   inflight ??= (async () => {
@@ -38,13 +45,16 @@ export function loadGithub(): Promise<GhStats> {
     const recent = [...own].sort((a, b) => b.pushed_at.localeCompare(a.pushed_at)).slice(0, 3);
     const lists = await Promise.all(recent.map((r) =>
       get<RepoCommit[]>(`/repos/${GH_USER}/${r.name}/commits?per_page=4`).then((cs) => cs.map((c) => ({ c, repo: r.name })), () => [])));
+    // These are all my own repos, so keep every commit except bots'. Commits made through an AI
+    // agent are authored by its account rather than GH_USER, and filtering on the author used to
+    // hide nearly all of them.
     const commits: Commit[] = lists.flat()
-      .filter(({ c }) => !c.author || c.author.login === GH_USER)
-      .map(({ c, repo }) => ({ sha: c.sha.slice(0, 7), message: c.commit.message.split('\n')[0], repo, url: c.html_url, date: c.commit.author?.date ?? '' }))
+      .filter(({ c }) => !c.author?.login.endsWith('[bot]'))
+      .map(({ c, repo }) => ({ sha: c.sha.slice(0, 7), message: subject(c.commit.message), repo, url: c.html_url, date: c.commit.author?.date ?? '' }))
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 6);
     const data: GhStats = { repos: own.length, stars: own.reduce((a, r) => a + r.stargazers_count, 0), languages, commits };
-    try { sessionStorage.setItem('cv-gh', JSON.stringify({ at: Date.now(), data })); } catch { /* ignore */ }
+    try { sessionStorage.setItem('cv-gh-v2', JSON.stringify({ at: Date.now(), data })); } catch { /* ignore */ }
     return data;
   })().finally(() => { inflight = null; });
   return inflight;
