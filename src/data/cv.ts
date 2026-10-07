@@ -113,6 +113,7 @@ export const cv = {
     featured: { fa: 'پروژهٔ فعلی', en: 'Current project' },
     now: { fa: 'اکنون', en: 'Now' },
     visit: { fa: 'مشاهدهٔ سایت', en: 'Visit site' },
+    requestDemo: { fa: 'درخواست دمو', en: 'Request a demo' },
     source: { fa: 'سورس‌کد', en: 'Source' },
     contactTitle: { fa: 'پروژهٔ بعدی رو با هم بسازیم', en: "Let's build the next thing together" },
     contactLead: {
@@ -244,7 +245,7 @@ export const cv = {
       group: { fa: 'بک‌اند و داده', en: 'Backend & Data' },
       items: [
         { name: 'C# · ASP.NET Core', level: 3 },
-        { name: 'SQL', level: 3 },
+        { name: 'PostgreSQL · Prisma', level: 3 },
         { name: 'Python', level: 3 },
         { name: 'Pandas · NumPy', level: 3 },
         { name: 'scikit-learn', level: 3 },
@@ -333,6 +334,34 @@ export const cv = {
   ],
 
   projects: [
+    {
+      id: 'gymplan',
+      featured: true,
+      tag: { fa: 'پروژهٔ جدید · در حال توسعه', en: 'New project · in active development' },
+      title: { fa: 'جیم‌پلن', en: 'GymPlan' },
+      desc: {
+        fa: 'اپلیکیشن فول‌استک بدنسازی برای فارسی‌زبان‌ها: برنامهٔ تمرینی را حرکت‌به‌حرکت بچین و با یک لینک ثابت بفرست. مربی و شاگرد پنل جدا دارند، هر ست ثبت می‌شود و اپ وزنهٔ جلسهٔ بعد را پیشنهاد می‌دهد.',
+        en: 'A full-stack training app for Persian-speaking lifters: build a plan exercise by exercise and share it as one permanent link. Coaches and students get their own panels, every set is logged, and the app suggests the next session\'s weights.'
+      },
+      stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Better Auth', 'Zod', 'Vitest'],
+      stats: [
+        { value: 2000, plus: true, label: { fa: 'حرکت با گیف و عضلهٔ درگیر', en: 'exercises with GIFs and muscles' } },
+        { value: 4, label: { fa: 'نقش: کاربر، شاگرد، مربی، ادمین', en: 'roles: user, student, coach, admin' } },
+        { value: 15, label: { fa: 'مدل داده در Postgres', en: 'Postgres data models' } },
+        { value: 60, plus: true, label: { fa: 'تست با Vitest', en: 'Vitest tests' } }
+      ],
+      highlights: [
+        { fa: 'لینک اشتراک دائمی برای هر برنامه', en: 'A permanent share link per plan' },
+        { fa: 'جست‌وجوی فازی حرکت‌ها (pg_trgm)', en: 'Fuzzy exercise search (pg_trgm)' },
+        { fa: 'پنل مربی و شاگرد با دعوت‌نامه', en: 'Coach and student panels with invites' },
+        { fa: 'ثبت تمرین ست‌به‌ست با تایمر استراحت', en: 'Set-by-set logging with a rest timer' },
+        { fa: 'پیشنهاد اضافه‌بار پیش‌رونده', en: 'Progressive-overload suggestions' },
+        { fa: 'تخمین 1RM، رکوردها و نمودار پیشرفت', en: 'Estimated 1RM, PRs and progress charts' },
+        { fa: 'چک‌این هفتگی با عکس قبل و بعد', en: 'Weekly check-ins with before/after photos' },
+        { fa: 'پنل ادمین و تنظیمات سایت', en: 'Admin panel and site settings' }
+      ],
+      note: { fa: 'ریپوی خصوصی؛ دمو و مرور کد در صورت درخواست.', en: 'Private repository. Demo and code walkthrough on request.' }
+    },
     {
       id: 'sido',
       featured: true,

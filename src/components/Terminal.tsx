@@ -90,7 +90,8 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     open: (arg = '') => {
       const p = cv.projects.find((x) => x.id === arg);
       if (!p) return print(<><C c="e">{i.L('پروژه پیدا نشد', 'project not found')}:</C> {arg}</>);
-      const url = (p.url ?? p.code)!;
+      const url = p.url ?? p.code;
+      if (!url) return print(<><C c="m">{i.t(p.note ?? cv.ui.requestDemo)}</C></>);
       print(<>{i.L('در حال باز کردن', 'opening')} <a href={url} {...ext}>{url}</a> …</>);
       window.open(url, '_blank', 'noopener');
     },

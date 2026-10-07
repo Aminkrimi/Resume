@@ -16,7 +16,7 @@ A bilingual (فارسی / English) developer portfolio built with **Next.js 16 (
 - **Vim motions:** `j` / `k` move between sections, `gg` jumps to the top and `G` to the bottom.
 - **Contact as an API request:** a Postman-style `POST` form with validation and a response panel. Set a repository variable `FORM_ENDPOINT` (e.g. a Formspree form URL) under *Settings → Secrets and variables → Actions → Variables* to send real requests. Without it, the form opens the visitor's mail app with the message filled in.
 - **Git graph experience:** the work history is drawn as `git log --graph`. Each job is a commit on its own branch (`main`, `ml/research`, `feat/sido`) that forks from `main` in the year it started. Branch, lane and start year live on each job in `cv.ts`.
-- **GitHub, live:** the latest real commits from the three most recently pushed repos, public repo and star counts, and language shares, from the public GitHub API (`src/lib/github.ts`, cached for 10 minutes per session), with loading, error and empty states. The terminal's `git log` uses the same data.
+- **GitHub, live:** the latest real commits from the three most recently pushed public repos (bot commits are skipped; a merged pull request shows its title), public repo and star counts, and language shares, from the public GitHub API (`src/lib/github.ts`, cached for 10 minutes per session), with loading, error and empty states. The terminal's `git log` uses the same data.
 - **Playground:** visitors edit and run JavaScript against the page's own data (`amin`). The code runs in a Web Worker with a 1.5s timeout, so a bad snippet can't freeze the page. There are four ready-made examples, and `⌘/Ctrl + Enter` runs the code.
 - **Status bar** (desktop): VS Code-style, with the branch, the "file" of the section in view, a scroll percentage from a pure-CSS scroll-driven counter, and Tehran time.
 - **Source view** (`S`, the `{ }` button, or the palette): every section flips in 3D to the file it is built from (`about.md`, `skills.json`, `experience.ts`, `projects.ts`, `contact.sh`). The code is generated from the real data in `cv.ts` (`src/lib/source.ts`), syntax-highlighted, with a copy button.
@@ -33,7 +33,7 @@ The featured Sido block is text-led until you add a real screenshot. Save a 1100
 
 ## Editing content
 
-**All text lives in [`src/data/cv.ts`](src/data/cv.ts)** and is type-checked against `src/data/types.ts`. Every field has the form `{ fa, en }`. To update the resume you edit this one file: skills (`level` 1-5; level 5 renders as a solid pill), experience, projects (`featured`, `highlights`, `img`) and contact links.
+**All text lives in [`src/data/cv.ts`](src/data/cv.ts)** and is type-checked against `src/data/types.ts`. Every field has the form `{ fa, en }`. To update the resume you edit this one file: skills (`level` 1-5; level 5 renders as a solid pill), experience, projects (`featured`, `tag`, `highlights`, `stats`, `note`, `img`) and contact links.
 
 ## Structure
 

@@ -93,7 +93,7 @@ export function workSource(i: I18n): CodeLines {
     [['k', 'import type'], ['u', ' { '], ['f', 'Project'], ['u', ' } '], ['k', 'from'], ['s', " './types'"], ['u', ';']],
     [],
     ...tsConst('projects', 'Project[]', cv.projects.map((p) => ({
-      id: p.id, title: i.t(p.title), ...(p.url ? { url: p.url } : { repo: p.code }), stack: p.stack,
+      id: p.id, title: i.t(p.title), ...(p.url ? { url: p.url } : p.code ? { repo: p.code } : { private: true }), stack: p.stack,
     }))),
   ];
 }

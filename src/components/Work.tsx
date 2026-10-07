@@ -15,18 +15,34 @@ function Stack({ items }: { items: string[] }) {
 
 function Featured({ p, i }: { p: Project; i: I18n }) {
   return (
-    <article className="featured reveal">
+    <article className="featured reveal" id={`project-${p.id}`}>
       <div className="featured-copy">
-        <p className="featured-tag">{i.t(cv.ui.featured)}</p>
+        <p className="featured-tag">{i.t(p.tag ?? cv.ui.featured)}</p>
         <h3>{i.t(p.title)}</h3>
         <p>{i.t(p.desc)}</p>
         <Stack items={p.stack} />
         {p.url && <a className="btn btn-primary" href={p.url} {...ext}>{i.t(cv.ui.visit)}<Icon name="arrow" className="i-go" /></a>}
+        {!p.url && p.note && (
+          <div className="featured-cta">
+            <a className="btn btn-primary" href="#contact">{i.t(cv.ui.requestDemo)}<Icon name="arrow" className="i-go" /></a>
+            <p className="featured-note">{i.t(p.note)}</p>
+          </div>
+        )}
       </div>
       {p.highlights && (
         <ol className="featured-list">
           {p.highlights.map((h) => <li key={h.en}>{i.t(h)}</li>)}
         </ol>
+      )}
+      {p.stats && (
+        <dl className="featured-stats">
+          {p.stats.map((s) => (
+            <div key={s.label.en}>
+              <dt>{i.t(s.label)}</dt>
+              <dd className="tnum">{i.num(s.value)}{s.plus && '+'}</dd>
+            </div>
+          ))}
+        </dl>
       )}
       {p.img && <Shot src={p.img} alt={i.t(p.title)} className="featured-shot" />}
     </article>
@@ -43,7 +59,7 @@ export function Work({ i }: { i: I18n }) {
       <div className="wrap">
         <div className="ui-view">
           <SectionHead title={i.t(cv.ui.workTitle)} />
-          {featured.map((p) => <Featured p={p} i={i} key={p.id} />)}
+          <div className="featured-stack">{featured.map((p) => <Featured p={p} i={i} key={p.id} />)}</div>
 
           <h3 className="sub-title reveal">{i.t(cv.ui.clientTitle)}</h3>
           <div className="gallery">
