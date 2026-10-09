@@ -13,5 +13,5 @@ npm run dev          # live preview in the browser
 npm run pdf          # writes ../public/Amin-Karimi-Resume.pdf
 ```
 
-`npm run pdf` uses Playwright's Chromium. If you only have a system Chrome or Chromium, point to it:
+`npm run pdf` uses the first browser it finds: `CHROMIUM_PATH`, Playwright's Chromium, then the installed Chrome or Edge (so on Windows it just works). To use a specific one:
 `CHROMIUM_PATH=/path/to/chrome npm run pdf`. The export fails loudly if the content spills past one A4 page.

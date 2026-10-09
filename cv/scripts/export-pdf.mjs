@@ -11,6 +11,28 @@ const dist = join(root, 'dist');
 const out = resolve(root, process.argv[2] ?? '../public/Amin-Karimi-Resume.pdf');
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
 
+/**
+ * Uses the first browser that starts: CHROMIUM_PATH, Playwright's own Chromium,
+ * then the Chrome or Edge already installed on the machine (Edge ships with Windows),
+ * so `npx playwright install` is optional.
+ */
+async function launchBrowser() {
+  const options = [
+    process.env.CHROMIUM_PATH && { executablePath: process.env.CHROMIUM_PATH },
+    {},
+    { channel: 'chrome' },
+    { channel: 'msedge' },
+  ].filter(Boolean);
+  for (const option of options) {
+    try {
+      return await chromium.launch(option);
+    } catch {
+      // try the next one
+    }
+  }
+  throw new Error('No Chromium found. Install Chrome or Edge, run `npx playwright install chromium`, or set CHROMIUM_PATH.');
+}
+
 const server = createServer(async (req, res) => {
   const pathname = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   const path = join(dist, pathname.endsWith('/') ? `${pathname}index.html` : pathname);
@@ -23,8 +45,7 @@ const server = createServer(async (req, res) => {
 }).listen(0);
 
 const { port } = server.address();
-const executablePath = process.env.CHROMIUM_PATH;
-const browser = await chromium.launch(executablePath ? { executablePath } : {});
+const browser = await launchBrowser();
 try {
   const page = await browser.newPage();
   await page.goto(`http://localhost:${port}/`, { waitUntil: 'networkidle' });
