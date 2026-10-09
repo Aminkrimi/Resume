@@ -3,7 +3,7 @@ import { Icon } from './Icon';
 
 export function Header() {
   return (
-    <header className="border-b border-line pr-[8mm] pl-[7mm] pt-[9mm] pb-[5mm]">
+    <header className="border-b border-line px-[7mm] pt-[9mm] pb-[5mm]">
       <div className="flex items-end justify-between gap-6">
         <div>
           <h1 className="font-display text-[26pt] leading-none font-extrabold tracking-[-0.02em] text-navy">

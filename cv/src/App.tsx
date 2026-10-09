@@ -17,9 +17,9 @@ export function App() {
       <Header />
       <div className="grid flex-1 grid-cols-1 md:grid-cols-[35%_65%] print:grid-cols-[35%_65%]">
         <Sidebar />
-        <div className="flex flex-col gap-[6mm] px-[8mm] py-[7mm]">
+        <div className="flex flex-col gap-[5mm] px-[7mm] py-[6mm]">
           <Section title="Professional Summary">
-            <p className="text-[8.6pt] leading-[1.55] text-ink/85">{resume.summary}</p>
+            <p className="text-[8.4pt] leading-[1.5] text-ink/85">{resume.summary}</p>
           </Section>
           <Experience />
           <Projects />

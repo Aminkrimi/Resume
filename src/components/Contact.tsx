@@ -1,5 +1,5 @@
 import { cv } from '@/data/cv';
-import type { I18n } from '@/lib/i18n';
+import { CV_PDF, type I18n } from '@/lib/i18n';
 import { ActionButton } from './ActionButton';
 import { ApiForm, type ApiLabels } from './ApiForm';
 import { Icon } from './Icon';
@@ -16,6 +16,7 @@ export function Contact({ i }: { i: I18n }) {
           <div className="mail reveal">
             <a className="mail-link ltr" href={`mailto:${p.email}`}>{p.email}</a>
             <ActionButton action="copy-email" className="btn btn-ghost"><Icon name="copy" />{i.t(cv.ui.copyEmail)}</ActionButton>
+            <a className="btn btn-ghost" href={CV_PDF} download="Amin-Karimi-Resume.pdf"><Icon name="download" />{i.t(cv.ui.ctaCv)}</a>
           </div>
           <ul className="socials reveal">
             {p.social.filter((s) => s.id !== 'mail').map((s) => (

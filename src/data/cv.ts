@@ -132,7 +132,7 @@ export const cv = {
       theme: { fa: 'تغییر تم (روشن / تاریک)', en: 'Toggle theme (light / dark)' },
       lang: { fa: 'Switch to English', en: 'تغییر زبان به فارسی' },
       email: { fa: 'کپی ایمیل', en: 'Copy email address' },
-      print: { fa: 'چاپ / ذخیرهٔ PDF رزومه', en: 'Print / save CV as PDF' },
+      print: { fa: 'دانلود رزومه (PDF)', en: 'Download CV (PDF)' },
       github: { fa: 'باز کردن گیت‌هاب', en: 'Open GitHub' },
       telegram: { fa: 'پیام در تلگرام', en: 'Message on Telegram' },
       terminal: { fa: 'باز کردن ترمینال', en: 'Open terminal' },
