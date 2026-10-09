@@ -157,8 +157,8 @@ export const cv = {
   about: {
     paragraphs: [
       {
-        fa: 'سلام! من محمد امین کریمی‌ام؛ توسعه‌دهندهٔ فرانت‌اند، متولد ۲۸ آذر ۱۳۷۸ و فارغ‌التحصیل کارشناسی علوم کامپیوتر از دانشگاه قم. از سال ۱۳۹۸ رابط کاربری می‌سازم؛ از وب‌سایت‌های شرکتی تا پلتفرم‌های پیچیدهٔ چندماژوله با React، Next.js و TypeScript.',
-        en: "Hi! I'm Mohammad Amin Karimi, a front-end engineer born in December 1999, with a B.Sc. in Computer Science from the University of Qom. I've been shipping interfaces since 2019, from company websites to complex multi-module platforms built with React, Next.js and TypeScript."
+        fa: 'سلام! من محمد امین کریمی‌ام؛ توسعه‌دهندهٔ فرانت‌اند، متولد ۲۸ آذر ۱۳۷۸ فارغ‌التحصیل کارشناسی علوم کامپیوتر از دانشگاه قم و دانشجوی کارشناسی ارشد هوش مصنوعی در دانشگاه علوم و تحقیقات. از سال ۱۳۹۸ رابط کاربری می‌سازم؛ از وب‌سایت‌های شرکتی تا پلتفرم‌های پیچیدهٔ چندماژوله با React، Next.js و TypeScript.',
+        en: "Hi! I'm Mohammad Amin Karimi, a front-end engineer born in December 1999, with a B.Sc. in Computer Science from the University of Qom, now studying for an M.Sc. in Artificial Intelligence at IAU Science and Research Branch. I've been shipping interfaces since 2019, from company websites to complex multi-module platforms built with React, Next.js and TypeScript."
       },
       {
         fa: 'کمال‌گرایی‌ام را مستقیم وارد کد می‌کنم: کامپوننت‌های قابل استفادهٔ مجدد، تایپ‌های دقیق، رابط‌های RTL-first و ریسپانسیو، و توجه وسواس‌گونه به جزئیات UI و پرفورمنس. برایم مهم است که کد هم برای کاربر خوب کار کند و هم برای تیم خوانا بماند.',
@@ -326,6 +326,13 @@ export const cv = {
 
   education: [
     {
+      degree: 'M.Sc.',
+      period: { fa: 'کارشناسی ارشد · در حال تحصیل', en: "Master's degree · in progress" },
+      title: { fa: 'هوش مصنوعی', en: 'Artificial Intelligence' },
+      org: { fa: 'دانشگاه آزاد اسلامی، واحد علوم و تحقیقات', en: 'Islamic Azad University, Science and Research Branch' }
+    },
+    {
+      degree: 'B.Sc.',
       period: { fa: 'کارشناسی پیوسته', en: "Bachelor's degree" },
       title: { fa: 'علوم کامپیوتر', en: 'Computer Science' },
       org: { fa: 'دانشگاه قم', en: 'University of Qom' },

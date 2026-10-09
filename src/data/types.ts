@@ -51,6 +51,6 @@ export interface CV {
   skills: { group: T; items: Skill[] }[];
   also: string[];
   experience: Job[];
-  education: { period: T; title: T; org: T; note: T }[];
+  education: { degree: string; period: T; title: T; org: T; note?: T }[];
   projects: Project[];
 }

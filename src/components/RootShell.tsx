@@ -15,7 +15,10 @@ const JSON_LD = {
   jobTitle: 'Front-End Engineer',
   email: 'mailto:m.amiin.krimi@gmail.com',
   address: { '@type': 'PostalAddress', addressLocality: 'Tehran', addressCountry: 'IR' },
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Qom' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'University of Qom' },
+    { '@type': 'CollegeOrUniversity', name: 'Islamic Azad University, Science and Research Branch' },
+  ],
   knowsAbout: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'CSS', 'UI Engineering', 'Machine Learning'],
   sameAs: ['https://github.com/Aminkrimi', 'https://t.me/AminKrimi', 'https://www.instagram.com/amiin_krimi'],
 };

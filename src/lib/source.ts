@@ -76,7 +76,6 @@ export function skillsSource(i: I18n): CodeLines {
 }
 
 export function experienceSource(i: I18n): CodeLines {
-  const e = cv.education[0];
   return [
     [['k', 'import type'], ['u', ' { '], ['f', 'Job'], ['u', ' } '], ['k', 'from'], ['s', " './types'"], ['u', ';']],
     [],
@@ -84,7 +83,7 @@ export function experienceSource(i: I18n): CodeLines {
       branch: j.branch, since: j.since, title: i.t(j.title), org: i.t(j.org), points: i.tl(j.points), stack: j.tags,
     }))),
     [],
-    ...tsConst('education', 'Degree', { title: i.t(e.title), school: i.t(e.org), level: i.t(e.period), projects: ['Huffman coding', 'LCS'] }),
+    ...tsConst('education', 'Degree[]', cv.education.map((e) => ({ title: i.t(e.title), school: i.t(e.org), level: i.t(e.period), ...(e.note && { projects: ['Huffman coding', 'LCS'] }) }))),
   ];
 }
 

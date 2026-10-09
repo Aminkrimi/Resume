@@ -40,8 +40,7 @@ function Lanes({ row, rows }: { row: number; rows: { lane: number }[] }) {
 }
 
 export function Experience({ i }: { i: I18n }) {
-  const e = cv.education[0];
-  const rows = [...cv.experience.map((j) => ({ lane: j.lane })), { lane: 0 }];
+  const rows = [...cv.experience.map((j) => ({ lane: j.lane })), ...cv.education.map(() => ({ lane: 0 }))];
   return (
     <section className="section" id="experience">
       <div className="wrap">
@@ -63,16 +62,21 @@ export function Experience({ i }: { i: I18n }) {
                 </div>
               </li>
             ))}
-            <li className="job job-edu reveal">
-              <div className="job-when"><Icon name="grad" /><span>{i.t(e.period)}</span></div>
-              <Lanes row={rows.length - 1} rows={rows} />
-              <div className="job-body">
-                <span className="branch lane-0"><Icon name="commit" />{i.L('کامیت اول', 'initial commit')}</span>
-                <h3>{i.t(cv.ui.educationTitle)}: {i.t(e.title)}</h3>
-                <p className="org">{i.t(e.org)}</p>
-                <p className="job-note">{i.t(e.note)}</p>
-              </div>
-            </li>
+            {cv.education.map((e, k) => {
+              const first = k === cv.education.length - 1;
+              return (
+                <li className="job job-edu reveal" key={e.degree}>
+                  <div className="job-when"><Icon name="grad" /><span>{i.t(e.period)}</span></div>
+                  <Lanes row={cv.experience.length + k} rows={rows} />
+                  <div className="job-body">
+                    <span className="branch lane-0"><Icon name="commit" />{first ? i.L('کامیت اول', 'initial commit') : i.L('در حال یادگیری', 'learning')}</span>
+                    <h3>{i.t(cv.ui.educationTitle)}: {i.t(e.title)}</h3>
+                    <p className="org">{i.t(e.org)}</p>
+                    {e.note && <p className="job-note">{i.t(e.note)}</p>}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </div>
         <SourceView file="experience.ts" kind="experience" lang={i.lang} />

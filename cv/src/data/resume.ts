@@ -125,10 +125,10 @@ export const resume = {
   clients,
 
   education: cv.education.map((e) => ({
-    degree: 'B.Sc.',
+    degree: e.degree,
     field: e.title.en,
-    school: e.org.en,
-    detail: e.note.en,
+    school: e.note ? e.org.en : 'IAU Science & Research · in progress',
+    detail: e.note?.en,
   })) satisfies Degree[],
 
   highlights: [

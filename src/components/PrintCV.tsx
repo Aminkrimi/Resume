@@ -6,7 +6,6 @@ const short = (url?: string) => (url ?? '').replace(/^https?:\/\/(www\.)?/, '').
 /** Hidden on screen; the print stylesheet shows only this clean A4 résumé. */
 export function PrintCV({ i }: { i: I18n }) {
   const p = cv.person;
-  const e = cv.education[0];
   return (
     <article className="print-cv" aria-hidden="true">
       <header className="pcv-head">
@@ -37,7 +36,7 @@ export function PrintCV({ i }: { i: I18n }) {
         {cv.projects.map((x) => <div key={x.id}><b>{i.t(x.title)}:</b> {i.t(x.desc)} <span>{short(x.url ?? x.code)}</span></div>)}
       </div>
       <h2>{i.L('تحصیلات', 'Education')}</h2>
-      <div className="pcv-job"><div className="row">{i.t(e.period)} {i.t(e.title)}, {i.t(e.org)}</div></div>
+      {cv.education.map((e) => <div className="pcv-job" key={e.degree}><div className="row">{i.t(e.period)} {i.t(e.title)}, {i.t(e.org)}</div></div>)}
     </article>
   );
 }
