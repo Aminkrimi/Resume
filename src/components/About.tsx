@@ -31,8 +31,14 @@ export function About({ i }: { i: I18n }) {
               {cv.about.paragraphs.map((x, k) => <p className="reveal" key={k}>{i.t(x)}</p>)}
             </div>
             <aside className="about-side reveal">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="about-photo" src={asset('/img/profile.webp')} alt={i.t(p.name)} width={900} height={900} loading="lazy" decoding="async" />
+              <div className="about-id">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="about-avatar" src={asset('/img/profile-avatar.webp')} alt={i.t(p.name)} width={240} height={240} loading="lazy" decoding="async" />
+                <div>
+                  <p className="about-id-name">{i.t(p.name)}</p>
+                  <p className="about-id-role">{i.t(p.role)}</p>
+                </div>
+              </div>
               <dl className="stats">
                 {stats.map((s) => (
                   <div key={s.label.en}>
