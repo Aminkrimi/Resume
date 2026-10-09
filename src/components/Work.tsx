@@ -21,10 +21,12 @@ function Featured({ p, i }: { p: Project; i: I18n }) {
         <h3>{i.t(p.title)}</h3>
         <p>{i.t(p.desc)}</p>
         <Stack items={p.stack} />
-        {p.url && <a className="btn btn-primary" href={p.url} {...ext}>{i.t(cv.ui.visit)}<Icon name="arrow" className="i-go" /></a>}
-        {!p.url && p.note && (
+        {p.url && !p.note && <a className="btn btn-primary" href={p.url} {...ext}>{i.t(cv.ui.visit)}<Icon name="arrow" className="i-go" /></a>}
+        {p.note && (
           <div className="featured-cta">
-            <a className="btn btn-primary" href="#contact">{i.t(cv.ui.requestDemo)}<Icon name="arrow" className="i-go" /></a>
+            {p.url
+              ? <a className="btn btn-primary" href={p.url} {...ext}>{i.t(cv.ui.visit)}<Icon name="arrow" className="i-go" /></a>
+              : <a className="btn btn-primary" href="#contact">{i.t(cv.ui.requestDemo)}<Icon name="arrow" className="i-go" /></a>}
             <p className="featured-note">{i.t(p.note)}</p>
           </div>
         )}

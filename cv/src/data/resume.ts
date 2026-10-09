@@ -78,6 +78,7 @@ const featured: Project[] = [
       desc: g.desc.en,
       impact: g.stats!.map((s) => `${s.value.toLocaleString('en')}${s.plus ? '+' : ''} ${s.label.en.split(':')[0]}`).join(' · '),
       stack: g.stack,
+      link: g.url,
     };
   })(),
   ...(['smartsearch', 'churn', 'portfolio'] as const).map((id) => {
