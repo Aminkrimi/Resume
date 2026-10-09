@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@theme {
+  --color-navy: #0f2747;
+  --color-accent: #2563eb;
+  --color-surface: #f8fafc;
+  --color-ink: #111827;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+
+  --font-sans: 'Inter Variable', 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #e9edf2;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11';
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+}
