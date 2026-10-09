@@ -24,7 +24,7 @@ A bilingual (فارسی / English) developer portfolio built with **Next.js 16 (
 - **Live Web Vitals** in the footer: LCP, CLS, INP and page weight of the current visit, measured in the visitor's browser with `PerformanceObserver` (`src/lib/vitals.ts`).
 - **Decoding headings:** section titles resolve from random glyphs (Persian letters on the Persian page) as they scroll in. Their height is fixed while scrambling, so there is no layout shift.
 - **Interactive terminal** (`` ` ``) with `git log` / `git branch` / `git status`, `typing-test` (code typing speed, WPM and accuracy), `lighthouse`, `changelog`, `neofetch`, `perf`, `cat <file>` (prints a section's source), `ls`, `source`, `inspect` and more, plus the **command palette** (`⌘K` / `Ctrl+K` / `/`).
-- **Printable CV:** the "Download CV" button prints a clean A4 resume in the current language.
+- **PDF CV:** "Download CV" (hero, contact section, palette, terminal `cv`) downloads `public/Amin-Karimi-Resume.pdf`, a one-page A4 resume built from `cv.ts` by the [`cv/`](cv/) package (React + Tailwind, `cd cv && npm run pdf`). `Ctrl+P` still prints the plain resume in the current language.
 - **Motion:** sections rise out of a slight 3D tilt as they enter the viewport. Screenshots tilt toward the pointer. The timeline line fills with a CSS scroll-driven animation. There are no scroll listeners, and everything honours `prefers-reduced-motion`.
 
 ## Sido screenshot

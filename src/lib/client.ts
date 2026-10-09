@@ -1,7 +1,7 @@
 'use client';
 
 import type { Lang } from '@/data/types';
-import { asset, langHref } from './i18n';
+import { asset, CV_PDF, langHref } from './i18n';
 
 /** Tiny event bus so server-rendered buttons can talk to client overlays. */
 export type CvEvent = 'terminal' | 'palette' | 'print' | 'copy-email' | 'toast' | 'inspect' | 'source' | 'focus-skill';
@@ -77,4 +77,12 @@ export async function copyText(text: string) {
     const ta = Object.assign(document.createElement('textarea'), { value: text });
     document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove();
   }
+}
+
+/** Downloads the A4 PDF résumé (the same file the hero's Download CV link points to). */
+export function downloadCv() {
+  const a = document.createElement('a');
+  a.href = CV_PDF;
+  a.download = 'Amin-Karimi-Resume.pdf';
+  a.click();
 }

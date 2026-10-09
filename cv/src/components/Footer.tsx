@@ -2,7 +2,7 @@ import { resume } from '../data/resume';
 
 export function Footer() {
   return (
-    <footer className="bg-navy pr-[8mm] pl-[7mm] py-[4mm] text-white">
+    <footer className="bg-navy px-[7mm] py-[4mm] text-white">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
         <dl className="flex flex-wrap gap-x-5 gap-y-2">
           {resume.highlights.map((h) => (

@@ -1,9 +1,11 @@
 /*
- * All résumé content lives here. Components only render this data,
- * so editing the CV never means touching markup.
+ * The résumé reads the portfolio's own data (src/data/cv.ts), so the site and
+ * the PDF never drift apart. This file only picks the English text, chooses
+ * what fits on one A4 page, and adds a few résumé-only lines.
  */
+import { cv } from '../../../src/data/cv';
 
-export type ContactKind = 'email' | 'phone' | 'location' | 'linkedin' | 'github' | 'portfolio';
+export type ContactKind = 'email' | 'phone' | 'location' | 'linkedin' | 'github' | 'telegram' | 'portfolio';
 
 export interface Contact {
   kind: ContactKind;
@@ -19,22 +21,24 @@ export interface SkillGroup {
 export interface Job {
   title: string;
   company: string;
-  note?: string;
   period: string;
   points: string[];
+  tags: string[];
 }
 
 export interface Project {
   name: string;
-  type: string;
+  label?: string;
+  desc: string;
   impact?: string;
   stack: string[];
+  link?: string;
 }
 
 export interface Degree {
   degree: string;
   field: string;
-  period: string;
+  school: string;
   detail?: string;
 }
 
@@ -43,118 +47,94 @@ export interface Highlight {
   label: string;
 }
 
+/** Fill in once known; the header shows LinkedIn only when this is set. */
+const LINKEDIN: string | null = null;
+
+const p = cv.person;
+const short = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const social = (id: string) => p.social.find((s) => s.id === id)!;
+const project = (id: string) => cv.projects.find((x) => x.id === id)!;
+const years = new Date().getFullYear() - p.startYear;
+const toolCount = cv.skills.reduce((n, g) => n + g.items.length, 0) + cv.also.length;
+
+const contacts: Contact[] = [
+  { kind: 'email', label: p.email, href: `mailto:${p.email}` },
+  { kind: 'phone', label: p.phoneLabel.en, href: `tel:${p.phone}` },
+  { kind: 'location', label: p.location.en },
+  { kind: 'github', label: short(social('github').url), href: social('github').url },
+  LINKEDIN
+    ? { kind: 'linkedin', label: short(LINKEDIN), href: LINKEDIN }
+    : { kind: 'telegram', label: short(social('telegram').url), href: social('telegram').url },
+  { kind: 'portfolio', label: 'aminkrimi.github.io/Resume', href: 'https://aminkrimi.github.io/Resume/en/' },
+];
+
+/** Featured on the résumé; Sido is already covered under Experience. */
+const featured: Project[] = [
+  (() => {
+    const g = project('gymplan');
+    return {
+      name: g.title.en,
+      label: 'Full-stack · in active development',
+      desc: g.desc.en,
+      impact: g.stats!.map((s) => `${s.value.toLocaleString('en')}${s.plus ? '+' : ''} ${s.label.en.split(':')[0]}`).join(' · '),
+      stack: g.stack,
+    };
+  })(),
+  ...(['smartsearch', 'churn', 'portfolio'] as const).map((id) => {
+    const x = project(id);
+    return { name: x.title.en === 'This portfolio' ? 'Developer Portfolio' : x.title.en, desc: x.desc.en.replace(/^This bilingual résumé/, 'Bilingual résumé site'), stack: x.stack, link: x.code };
+  }),
+];
+
+/** Client websites from the portfolio, listed by name in one line. */
+const clients = cv.projects.filter((x) => x.url && !x.featured).map((x) => x.title.en);
+
 export const resume = {
-  name: 'Amin Karimi',
-  role: 'Front-End Engineer',
-  focus: ['React', 'TypeScript', 'Next.js'],
-  statement: 'Building scalable, maintainable, and user-focused web applications with modern frontend technologies.',
+  name: p.name.en,
+  role: p.role.en,
+  focus: ['React', 'Next.js', 'TypeScript'],
+  statement: 'Building fast, clean and precise interfaces with React, Next.js and TypeScript.',
+  contacts,
 
-  contacts: [
-    { kind: 'email', label: 'm.amiin.krimi@gmail.com', href: 'mailto:m.amiin.krimi@gmail.com' },
-    { kind: 'phone', label: '+98 939 189 9523', href: 'tel:+989391899523' },
-    { kind: 'location', label: 'Tehran, Iran' },
-    // TODO: confirm the LinkedIn handle before sending the CV out.
-    { kind: 'linkedin', label: 'linkedin.com/in/aminkrimi', href: 'https://www.linkedin.com/in/aminkrimi' },
-    { kind: 'github', label: 'github.com/Aminkrimi', href: 'https://github.com/Aminkrimi' },
-    { kind: 'portfolio', label: 'aminkrimi.github.io/Resume', href: 'https://aminkrimi.github.io/Resume/en/' },
-  ] satisfies Contact[],
-
-  skills: [
-    {
-      title: 'Frontend',
-      items: [
-        'React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Shadcn UI',
-        'Redux', 'Zustand', 'React Query', 'TanStack Table', 'Framer Motion',
-      ],
-    },
-    { title: 'Backend / Integration', items: ['REST API', 'API Integration', 'Authentication', 'State Management'] },
-    { title: 'Libraries', items: ['React Hook Form', 'Zod', 'Radix UI', 'Nuqs', 'Sonner'] },
-    { title: 'Tools', items: ['Git', 'GitLab', 'Docker', 'Vite', 'ESLint', 'Prettier', 'VS Code'] },
-  ] satisfies SkillGroup[],
+  skills: cv.skills.map((g) => ({ title: g.group.en, items: g.items.map((s) => s.name) })) satisfies SkillGroup[],
+  also: cv.also,
 
   strengths: [
     'Clean Code Architecture',
-    'Component Design',
-    'Performance Optimization',
+    'Reusable Component Design',
+    'Performance & Web Vitals',
+    'RTL-first Responsive UI',
     'Problem Solving',
     'Team Collaboration',
-    'Continuous Learning',
-    'Product Thinking',
+    'AI-augmented Workflow',
   ],
 
-  summary:
-    'Front-End Engineer with 4+ years of experience building scalable and user-focused web applications using React, TypeScript, and modern frontend technologies. Experienced in designing reusable component systems, integrating complex APIs, improving application performance, and delivering production-ready products. Passionate about clean architecture, modern UI development, and creating impactful user experiences.',
+  summary: `Front-End Engineer with ${years}+ years of experience shipping interfaces, from company websites to complex multi-module platforms built with React, Next.js and TypeScript. Focused on reusable components with precise types, RTL-first responsive layouts and tight API integration, with an obsessive eye for UI detail and performance. Also works with PostgreSQL, Prisma and ASP.NET, with a machine-learning background.`,
 
-  experience: [
-    {
-      title: 'Front-End Engineer',
-      company: 'Test Sho',
-      note: 'Largest Project',
-      period: '2022 – Present',
-      points: [
-        'Developed and maintained complex production-level frontend applications using React, TypeScript, and Vite.',
-        'Built reusable component systems and scalable UI architecture.',
-        'Integrated REST APIs and managed complex application states.',
-        'Improved user experience, performance, and maintainability.',
-        'Collaborated with cross-functional teams to deliver product features.',
-      ],
-    },
-    {
-      title: 'Front-End Developer',
-      company: 'Ordibehesht',
-      period: '2021 – 2022',
-      points: [
-        'Developed responsive web applications using the React ecosystem.',
-        'Created reusable UI components.',
-        'Improved frontend architecture and user experience.',
-      ],
-    },
-    {
-      title: 'Front-End Developer',
-      company: 'Karaj Municipality',
-      period: '2020 – 2021',
-      points: [
-        'Built internal web applications.',
-        'Integrated backend services through REST APIs.',
-        'Improved usability and application performance.',
-      ],
-    },
-  ] satisfies Job[],
+  experience: cv.experience.map((j) => ({
+    title: j.title.en,
+    company: j.org.en.replace(/ \(.*?\)/, '').replace('Freelance & agency collaborations', 'Freelance & agencies'),
+    period: j.period.en.replace(' - ', ' – ').replace('Now', 'Present'),
+    points: j.points.en,
+    tags: j.tags,
+  })) satisfies Job[],
 
-  projects: [
-    {
-      name: 'Test Sho',
-      type: 'Large-Scale E-commerce Platform',
-      impact: 'Production application with complex business logic.',
-      stack: ['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'React Query', 'TanStack Table'],
-    },
-    {
-      name: 'Marketing Campaign System (IMP)',
-      type: 'Internal Marketing Management Platform',
-      stack: ['React', 'TypeScript', 'TanStack Query', 'Tailwind CSS'],
-    },
-    {
-      name: 'Laboratory Management System (IMP)',
-      type: 'Healthcare Management Platform',
-      stack: ['React', 'TypeScript', 'React Query', 'Zod'],
-    },
-    {
-      name: 'Ordibehesht',
-      type: 'Business Management Platform',
-      stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
-    },
-  ] satisfies Project[],
+  projects: featured.slice(0, 1),
+  openSource: featured.slice(1),
+  clients,
 
-  education: [
-    { degree: 'MSc', field: 'Artificial Intelligence and Soft Computing', period: '2023 – 2025', detail: 'GPA: 17 / 20' },
-    { degree: 'BSc', field: 'Computer Engineering', period: '2018 – 2022' },
-  ] satisfies Degree[],
+  education: cv.education.map((e) => ({
+    degree: 'B.Sc.',
+    field: e.title.en,
+    school: e.org.en,
+    detail: e.note.en,
+  })) satisfies Degree[],
 
   highlights: [
-    { value: '4+', label: 'Years Experience' },
-    { value: '5+', label: 'Production Projects' },
-    { value: 'React', label: 'Ecosystem Expert' },
-    { value: 'AI & ML', label: 'Academic Background' },
+    { value: `${years}+`, label: 'Years shipping' },
+    { value: `${cv.projects.length}`, label: 'Projects shipped' },
+    { value: `${toolCount}+`, label: 'Tools in the kit' },
+    { value: 'ML', label: 'Data & ML background' },
   ] satisfies Highlight[],
 
   motto: 'Building products, not just interfaces.',

@@ -1,7 +1,6 @@
 import { cv } from '@/data/cv';
-import type { I18n } from '@/lib/i18n';
+import { CV_PDF, type I18n } from '@/lib/i18n';
 import type { CodeLines } from './editorArt';
-import { ActionButton } from './ActionButton';
 import { HeroScene } from './HeroScene';
 import { Icon } from './Icon';
 
@@ -40,7 +39,7 @@ export function Hero({ i }: { i: I18n }) {
           <p className="hero-lead rise" style={{ '--d': 2 } as React.CSSProperties}>{i.t(cv.ui.heroLead)}</p>
           <div className="hero-cta rise" style={{ '--d': 3 } as React.CSSProperties}>
             <a className="btn btn-primary" href="#work">{i.t(cv.ui.ctaWork)}<Icon name="arrow" className="i-go" /></a>
-            <ActionButton action="print" className="btn btn-ghost"><Icon name="download" />{i.t(cv.ui.ctaCv)}</ActionButton>
+            <a className="btn btn-ghost" href={CV_PDF} download="Amin-Karimi-Resume.pdf"><Icon name="download" />{i.t(cv.ui.ctaCv)}</a>
           </div>
         </div>
         <HeroScene code={CODE} label={i.L('ویرایشگر کد سه‌بعدی که فایل amin.tsx را تایپ می‌کند', 'A 3D code editor typing out amin.tsx')} />

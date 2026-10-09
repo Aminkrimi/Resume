@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
 import { makeI18n } from '@/lib/i18n';
-import { copyText, emit, jumpSection, on, prefersReduced, switchLang, toggleSource, toggleTheme } from '@/lib/client';
+import { copyText, downloadCv, emit, jumpSection, on, prefersReduced, switchLang, toggleSource, toggleTheme } from '@/lib/client';
 import { Icon } from './Icon';
 import { Inspector } from './Inspector';
 import dynamic from 'next/dynamic';
@@ -36,7 +36,7 @@ export function Overlays({ lang }: { lang: Lang }) {
     const offs = [
       on('terminal', () => { setPalette(false); setTermLoaded(true); setTerm(true); }),
       on('palette', () => { setTerm(false); setPalette((v) => !v); }),
-      on('print', () => window.print()),
+      on('print', downloadCv),
       on('copy-email', async () => { await copyText(cv.person.email); showToast(i.t(cv.ui.copied)); }),
       on('toast', (m) => m && showToast(m)),
       on('source', () => showToast(i.t(toggleSource() ? cv.ui.sourceOn : cv.ui.sourceOff))),

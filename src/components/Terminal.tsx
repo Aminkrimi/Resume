@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useState, type KeyboardEvent, type ReactNo
 import { cv } from '@/data/cv';
 import type { Lang } from '@/data/types';
 import { asset, langHref, makeI18n } from '@/lib/i18n';
-import { emit, switchLang, toggleTheme } from '@/lib/client';
+import { downloadCv, emit, switchLang, toggleTheme } from '@/lib/client';
 import { aboutSource, contactSource, experienceSource, skillsSource, workSource } from '@/lib/source';
 import { fmtVitals, getVitals, goodVitals } from '@/lib/vitals';
 import { loadGithub, timeAgo } from '@/lib/github';
@@ -65,7 +65,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
         ['whoami', 'من کی هستم', 'who am I'], ['about', 'درباره من', 'short bio'], ['skills', 'مهارت‌ها', 'tech stack'],
         ['experience', 'سوابق کاری', 'work history (git log)'], ['projects', 'نمونه‌کارها', 'list projects'],
         ['open <id>', 'باز کردن پروژه', 'open a project'], ['contact', 'راه‌های ارتباط', 'how to reach me'],
-        ['theme', 'تغییر تم', 'toggle theme'], ['lang', 'تغییر زبان', 'switch language'], ['cv', 'دانلود رزومه', 'print / save CV'],
+        ['theme', 'تغییر تم', 'toggle theme'], ['lang', 'تغییر زبان', 'switch language'], ['cv', 'دانلود رزومه (PDF)', 'download CV (PDF)'],
         ['cat <file>', 'نمایش سورس یک بخش', 'print a section\'s source'], ['ls', 'فهرست فایل‌ها', 'list files'],
         ['git log', 'کامیت‌های واقعی گیت‌هاب', 'real GitHub commits'], ['git branch', 'برنچ‌های کاری', 'career branches'],
         ['typing-test', 'تست سرعت تایپ کد', 'code typing speed test'], ['lighthouse', 'امتیاز Lighthouse', 'Lighthouse scores from CI'], ['changelog', 'تاریخچهٔ تغییرات سایت', 'site changelog'], ['neofetch', 'مشخصات سیستم', 'system info'], ['perf', 'کارایی همین بازدید', 'live web vitals'],
@@ -98,7 +98,7 @@ export function Terminal({ lang, open, onClose }: { lang: Lang; open: boolean; o
     contact: () => cv.person.social.forEach((s) => print(<>{'  '}{s.label.padEnd(10)} <a href={s.url} {...ext}>{s.handle}</a></>)),
     theme: () => { toggleTheme(); print(<><C c="p">✓</C> theme → {document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'}</>); },
     lang: () => switchLang(lang),
-    cv: () => { onClose(); setTimeout(() => window.print(), 100); },
+    cv: () => { downloadCv(); print(<><C c="p">✓</C> {i.L('دانلود رزومه شروع شد', 'downloading Amin-Karimi-Resume.pdf')}</>); },
     clear: () => setLines([]),
     exit: () => onClose(),
     date: () => print(new Date().toString()),
