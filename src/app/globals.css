@@ -226,7 +226,10 @@ html[lang="fa"] .sec-title { line-height: 1.4; font-weight: 800; }
 .about-copy p + p { margin-top: 1.2em; }
 .about-copy .sec-head + p { color: var(--text); font-size: clamp(1.15rem, 1.6vw, 1.3rem); line-height: 1.6; }
 .about-side { position: sticky; top: calc(var(--nav-h) + 32px); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(22px, 3vw, 32px); box-shadow: var(--shadow); }
-.about-photo { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 30%; border-radius: var(--r-md); margin-bottom: 26px; }
+.about-id { display: flex; align-items: center; gap: 14px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
+.about-avatar { flex: none; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px var(--line); }
+.about-id-name { font-weight: 600; color: var(--text); line-height: 1.3; }
+.about-id-role { font-size: .88rem; color: var(--text-2); line-height: 1.4; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .stats div { display: flex; flex-direction: column-reverse; gap: 4px; }
 .stats dd { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 600; letter-spacing: var(--track-snug); line-height: 1; }
