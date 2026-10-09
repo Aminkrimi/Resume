@@ -343,6 +343,7 @@ export const cv = {
         fa: 'اپلیکیشن فول‌استک بدنسازی برای فارسی‌زبان‌ها: برنامهٔ تمرینی را حرکت‌به‌حرکت بچین و با یک لینک ثابت بفرست. مربی و شاگرد پنل جدا دارند، هر ست ثبت می‌شود و اپ وزنهٔ جلسهٔ بعد را پیشنهاد می‌دهد.',
         en: 'A full-stack training app for Persian-speaking lifters: build a plan exercise by exercise and share it as one permanent link. Coaches and students get their own panels, every set is logged, and the app suggests the next session\'s weights.'
       },
+      url: 'https://gym-plan-navy.vercel.app/',
       stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Better Auth', 'Zod', 'Vitest'],
       stats: [
         { value: 2000, plus: true, label: { fa: 'حرکت با گیف و عضلهٔ درگیر', en: 'exercises with GIFs and muscles' } },
@@ -360,7 +361,7 @@ export const cv = {
         { fa: 'چک‌این هفتگی با عکس قبل و بعد', en: 'Weekly check-ins with before/after photos' },
         { fa: 'پنل ادمین و تنظیمات سایت', en: 'Admin panel and site settings' }
       ],
-      note: { fa: 'ریپوی خصوصی؛ دمو و مرور کد در صورت درخواست.', en: 'Private repository. Demo and code walkthrough on request.' }
+      note: { fa: 'نسخهٔ زنده آنلاین است؛ ریپو خصوصی است و مرور کد در صورت درخواست.', en: 'Live demo is online. The repository is private; code walkthrough on request.' }
     },
     {
       id: 'sido',
